@@ -160,6 +160,111 @@ YEAR|quarter|p_to_i |p_from_i|f_to_i   |f_from_i |
 2017|Q1     |6778304| 7424671|154621.08|238545.94|
 
 
+---======================================================================================
+---===============   COUNTRY QUARTER    =================================================
+---======================================================================================
+
+---- puste przeloty:
+
+select count("COUNTRY NAME")  from country_q cq 
+where "PASSENGERS TO INDIA"::numeric = 0 AND "PASSENGERS FROM INDIA"::numeric  = 0 and "FREIGHT TO INDIA"::numeric  = 0 and "FREIGHT FROM INDIA" ::numeric = 0; 
+
+
+select count(distinct "COUNTRY NAME")  from country_q cq 
+where "PASSENGERS TO INDIA"::numeric = 0 AND "PASSENGERS FROM INDIA"::numeric  = 0 and "FREIGHT TO INDIA"::numeric  = 0 and "FREIGHT FROM INDIA" ::numeric = 0; 
+
+select distinct "COUNTRY NAME"  from country_q cq 
+where "PASSENGERS TO INDIA"::numeric = 0 AND "PASSENGERS FROM INDIA"::numeric  = 0 and "FREIGHT TO INDIA"::numeric  = 0 and "FREIGHT FROM INDIA" ::numeric = 0; 
+
+
+---przeloty tylko z ładunkiem (jakimkolwiek)
+select count("COUNTRY NAME")  from country_q cq 
+where  "PASSENGERS TO INDIA"::numeric = 0 AND "PASSENGERS FROM INDIA"::numeric  = 0 and ("FREIGHT TO INDIA"::numeric  > 0 or  "FREIGHT FROM INDIA" ::numeric > 0);  
+
+
+select count(distinct "COUNTRY NAME")  from country_q cq 
+where "PASSENGERS TO INDIA"::numeric = 0 AND "PASSENGERS FROM INDIA"::numeric  = 0 and ("FREIGHT TO INDIA"::numeric  > 0 or "FREIGHT FROM INDIA" ::numeric > 0); 
+
+select distinct "COUNTRY NAME"  from country_q cq 
+where "PASSENGERS TO INDIA"::numeric = 0 AND "PASSENGERS FROM INDIA"::numeric  = 0 and ("FREIGHT TO INDIA"::numeric  > 0 or  "FREIGHT FROM INDIA" ::numeric > 0); 
+
+
+
+---przeloty tylko z pasazerami (jakimikolwiek)
+select count("COUNTRY NAME")  from country_q cq 
+where  "FREIGHT TO INDIA"::numeric  = 0 and "FREIGHT FROM INDIA" ::numeric = 0 and ("PASSENGERS TO INDIA"::numeric > 0 or "PASSENGERS FROM INDIA"::numeric  > 0); 
+
+
+select count(distinct "COUNTRY NAME")  from country_q cq 
+where "FREIGHT TO INDIA"::numeric  = 0 and "FREIGHT FROM INDIA" ::numeric = 0 and ("PASSENGERS TO INDIA"::numeric > 0 or "PASSENGERS FROM INDIA"::numeric  > 0);
+
+select distinct "COUNTRY NAME"  from country_q cq 
+where "FREIGHT TO INDIA"::numeric  = 0 and "FREIGHT FROM INDIA" ::numeric = 0 and ("PASSENGERS TO INDIA"::numeric > 0 or "PASSENGERS FROM INDIA"::numeric  > 0); 
+
+
+
+
+
+---LICZBA PASAZEROW DO INDII:
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 2 ; 
+
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 2 desc ; 
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 3; 
+
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 3 desc ; 
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 4; 
+
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 4 desc ; 
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 5; 
+
+
+select "COUNTRY NAME", sum("PASSENGERS TO INDIA") as P_TO_I, sum("PASSENGERS FROM INDIA") as P_FROM_I, sum("FREIGHT TO INDIA") as ftoi, sum("FREIGHT FROM INDIA") as F_FROM_I 
+from country_q cq 
+group by 1 order by 5 desc ; 
+
+
+
+---WNIOSKI: 
+			---bylo 35 /499 lotow na pusto, z 7 krajow : Belgium, Georgia, Iraq, Jordan, Reunion, South Africa, Vietnam
+			--- wszystkie loty ktore mialy ladunek, mialy pasazerow chociaz w jedna strone		
+			--- 9 lotow do/z krajow docelowych/startowych gdzie byli pasazerowie, ale nie bylo ladunku (dotyczy to 3 krajow: Azerbaijan, Iraq, Yemen)
+
+
+			--- WAŻNE!!	jest UAE z *, jest tez United ARAB Emirates bez * - trzeba zweryfikowac czy to to samo, o co chodzi z gwiazdka
+
+			---PASAZEROWIE:
+			---do Indii leciało: najmniej 4104 pasażerow, najwięcej 15045602 (to UAE z *, jest tez United ARAB Emirates bez * - trzeba zweryfikowac czy to to samo)
+			---z Indii leciało: najmniej 4386 pasażerow, najwięcej 15398512
+			
+			---TOWARY:
+			----do Indii przylecialo: najmniej 2.2 towarow, a najwiecej: 234428.89
+			----z Indii przyleciało: najmniej 1.3 towarow, a najwiecej: 496442.0 
+
+
+
+
+
 
 
 
