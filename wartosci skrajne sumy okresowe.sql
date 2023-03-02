@@ -53,6 +53,7 @@ group by 1 order by 5 desc;
 				--- Z Indii wylecialo: najmniej - 0.1, najwięcej 347591.8
 
 
+
 ---udzial linii indyjskich w calym ruchu 			
 select count( distinct "AIRLINE NAME")  from month_international mi 
 where "CARRIER TYPE"  ilike 'DOMESTIC';
@@ -67,9 +68,31 @@ select count(distinct  "AIRLINE NAME")  from month_international mi
 
 			---WNIOSKI: 5 linii krajowych ( 5%, wszystkich jest 100), które zrealizowały 135 loty (6%, wszystkie loty: 2334) 
 
+----wartosci max i min dla poszczegolnych linii lotniczych
 
-----rozklad lotow w podziale na lata/kwartaly/miesiace
-select "YEAR",
+select "AIRLINE NAME", max("PASSENGERS TO INDIA"), min("PASSENGERS TO INDIA"), avg("PASSENGERS TO INDIA"), stddev("PASSENGERS TO INDIA") from month_international mi
+group by 1 order by 2; 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+----rozklad oblozenia lotow w podziale na lata/kwartaly/miesiace
+select "YEAR", 
 	sum("PASSENGERS TO INDIA") as P_TO_I, 
 	sum("PASSENGERS FROM INDIA") as P_FROM_I, 
 	sum("FREIGHT TO INDIA") as F_TO_I, 
