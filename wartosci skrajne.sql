@@ -70,7 +70,7 @@ select count(distinct  "AIRLINE NAME")  from month_international mi
 
 ----ile wartosci jest poza odchyleniem standardowym dla PASSENGERS TO INDIA
 
-		
+select count(*) from (		
 select "AIRLINE NAME", "PASSENGERS TO INDIA",  
 case
 	when abs("PASSENGERS TO INDIA" - avg_value) < odchylenie then 1 else 0 end as in_std 
@@ -78,11 +78,25 @@ case
 from
 	(select *, round(avg("PASSENGERS TO INDIA") over (partition by "AIRLINE NAME"),2) as avg_value,
 	round(stddev("PASSENGERS TO INDIA") over (partition by "AIRLINE NAME"),2) as odchylenie
-	from month_international mi) as q;
+	from month_international mi) as q) as q2 where in_std = 1 ;
 
------WNIOSKI: 200 jest poza odchyleniem na 2334.
+				-----WNIOSKI: 785 jest poza odchyleniem na 2334.
 
 
+----ile wartosci jest poza odchyleniem standardowym dla PASSENGERS TO INDIA
+
+select count(*) from (
+		
+select "AIRLINE NAME", "PASSENGERS FROM INDIA",  
+case
+	when abs("PASSENGERS FROM INDIA" - avg_value) < odchylenie then 1 else 0 end as in_std 
+	
+from
+	(select *, round(avg("PASSENGERS FROM INDIA") over (partition by "AIRLINE NAME"),2) as avg_value,
+	round(stddev("PASSENGERS FROM INDIA") over (partition by "AIRLINE NAME"),2) as odchylenie
+	from month_international mi) as q) as q2 where in_std = 0;
+
+				-----WNIOSKI: 778 jest poza odchyleniem na 2334.
 
 
 
