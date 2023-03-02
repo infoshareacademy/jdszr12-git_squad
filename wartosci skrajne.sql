@@ -68,16 +68,19 @@ select count(distinct  "AIRLINE NAME")  from month_international mi
 
 			---WNIOSKI: 5 linii krajowych ( 5%, wszystkich jest 100), które zrealizowały 135 loty (6%, wszystkie loty: 2334) 
 
-----wartosci max i min dla poszczegolnych linii lotniczych
+----ile wartosci jest poza odchyleniem standardowym dla PASSENGERS TO INDIA
 
-select "AIRLINE NAME", max("PASSENGERS TO INDIA"), min("PASSENGERS TO INDIA"), avg("PASSENGERS TO INDIA"), stddev("PASSENGERS TO INDIA") from month_international mi
-group by 1 order by 2; 
+		
+select "AIRLINE NAME", "PASSENGERS TO INDIA",  
+case
+	when abs("PASSENGERS TO INDIA" - avg_value) < odchylenie then 1 else 0 end as in_std 
+	
+from
+	(select *, round(avg("PASSENGERS TO INDIA") over (partition by "AIRLINE NAME"),2) as avg_value,
+	round(stddev("PASSENGERS TO INDIA") over (partition by "AIRLINE NAME"),2) as odchylenie
+	from month_international mi) as q;
 
-
-
-
-
-
+-----WNIOSKI: 200 jest poza odchyleniem na 2334.
 
 
 
