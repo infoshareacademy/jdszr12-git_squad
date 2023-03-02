@@ -99,9 +99,24 @@ from
 				-----WNIOSKI: 778 jest poza odchyleniem na 2334.
 
 
+----ile wartosci jest poza odchyleniem standardowym dla "FREIGHT TO INDIA"
+
+select count(*) from (
+		
+select "AIRLINE NAME", "FREIGHT TO INDIA",  
+case
+	when abs("FREIGHT TO INDIA" - avg_value) < odchylenie then 1 else 0 end as in_std 
+	
+from
+	(select *, avg("FREIGHT TO INDIA") over (partition by "AIRLINE NAME") as avg_value,
+	stddev("FREIGHT TO INDIA") over (partition by "AIRLINE NAME") as odchylenie
+	from month_international mi) as q) as q2 where in_std = 0 ;
+
+				-----WNIOSKI: 740 jest poza odchyleniem na 2334.
 
 
 
+  
 
 
 
