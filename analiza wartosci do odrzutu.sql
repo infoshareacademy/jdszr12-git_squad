@@ -138,3 +138,95 @@ from
 ---------WNIOSKI: Poza odchyleniem jest 410 z 2841;
 
 
+====================================================================================
+-----GRUPOWANIE DLA CITY1 - MIN, MAX, SUM, SREDNIA--------------
+====================================================================================
+----->>>> dla CITY1
+
+SELECT city1, 
+	min("PASSENGERS FROM CITY1 TO CITY2"),
+	max("PASSENGERS FROM CITY1 TO CITY2"),
+	sum("PASSENGERS FROM CITY1 TO CITY2"),
+	round(avg("PASSENGERS FROM CITY1 TO CITY2"),2) as avg_pass,
+
+	min("PASSENGERS FROM CITY2 TO CITY1"),
+	max("PASSENGERS FROM CITY2 TO CITY1"),
+	sum("PASSENGERS FROM CITY2 TO CITY1"),
+	round(avg("PASSENGERS FROM CITY2 TO CITY1"),2) as avg_pass2,
+
+	min("FREIGHT FROM CITY1 TO CITY2"),
+	max("FREIGHT FROM CITY1 TO CITY2"),
+	sum("FREIGHT FROM CITY1 TO CITY2"),
+	avg("FREIGHT FROM CITY1 TO CITY2") as avg_frei,
+
+
+	min("FREIGHT FROM CITY2 TO CITY1"),
+	max("FREIGHT FROM CITY2 TO CITY1"),
+	sum("FREIGHT FROM CITY2 TO CITY1"),
+	avg("FREIGHT FROM CITY2 TO CITY1") as avg_frei1
+
+
+FROM citypairwise c 
+group by 1 order by 1;
+
+
+----->>>> dla CITY2
+
+SELECT city2, 
+	min("PASSENGERS FROM CITY1 TO CITY2"),
+	max("PASSENGERS FROM CITY1 TO CITY2"),
+	sum("PASSENGERS FROM CITY1 TO CITY2"),
+	round(avg("PASSENGERS FROM CITY1 TO CITY2"),2) as avg_pass,
+
+	min("PASSENGERS FROM CITY2 TO CITY1"),
+	max("PASSENGERS FROM CITY2 TO CITY1"),
+	sum("PASSENGERS FROM CITY2 TO CITY1"),
+	round(avg("PASSENGERS FROM CITY2 TO CITY1"),2) as avg_pass2,
+
+	min("FREIGHT FROM CITY1 TO CITY2"),
+	max("FREIGHT FROM CITY1 TO CITY2"),
+	sum("FREIGHT FROM CITY1 TO CITY2"),
+	avg("FREIGHT FROM CITY1 TO CITY2") as avg_frei,
+
+
+	min("FREIGHT FROM CITY2 TO CITY1"),
+	max("FREIGHT FROM CITY2 TO CITY1"),
+	sum("FREIGHT FROM CITY2 TO CITY1"),
+	avg("FREIGHT FROM CITY2 TO CITY1") as avg_frei1
+
+
+FROM citypairwise c 
+group by 1 order by 1;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
