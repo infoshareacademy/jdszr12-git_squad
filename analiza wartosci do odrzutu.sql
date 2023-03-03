@@ -199,11 +199,34 @@ FROM citypairwise c
 group by 1 order by 1;
 
 
+====================================================================================
+-----WYSZUKANIE PUSTYCH PRZELOTOW (calkowicie lub tylko passengers/freight--------------
+====================================================================================
+
+---->>>> Całkowicie puste przeloty = 185 przelotow
+
+select * from citypairwise c 
+where "PASSENGERS FROM CITY1 TO CITY2" = 0 and "PASSENGERS FROM CITY2 TO CITY1" = 0 and "FREIGHT FROM CITY1 TO CITY2" = 0 and "FREIGHT FROM CITY2 TO CITY1" = 0;
+
+
+---->>>>> przeloty tylko pasazerskie = 299 przelotow (w obie strony sa pasazerowie), 323 przelotow (przynajmniej w jedna strone sa pasazerowie)
+
+select * from citypairwise c 
+where "PASSENGERS FROM CITY1 TO CITY2" > 0 AND "PASSENGERS FROM CITY2 TO CITY1" >0 and "FREIGHT FROM CITY1 TO CITY2" = 0 and "FREIGHT FROM CITY2 TO CITY1" = 0;
+
+select * from citypairwise c 
+where ("PASSENGERS FROM CITY1 TO CITY2" > 0 OR "PASSENGERS FROM CITY2 TO CITY1" >0) and "FREIGHT FROM CITY1 TO CITY2" = 0 and "FREIGHT FROM CITY2 TO CITY1" = 0;
 
 
 
 
+--->>>> przeloty tylko z ładunkiem = 47 przelotow (w obie strony jest ładunek), 103 przeloty (przynajmniej w jedna strone jest ładunek)
 
+select * from citypairwise c 
+where "PASSENGERS FROM CITY1 TO CITY2" = 0 and "PASSENGERS FROM CITY2 TO CITY1" = 0 and "FREIGHT FROM CITY1 TO CITY2" > 0 and "FREIGHT FROM CITY2 TO CITY1" > 0;
+
+select * from citypairwise c 
+where "PASSENGERS FROM CITY1 TO CITY2" = 0 and "PASSENGERS FROM CITY2 TO CITY1" = 0 and ("FREIGHT FROM CITY1 TO CITY2" > 0 OR "FREIGHT FROM CITY2 TO CITY1" > 0);
 
 
 
