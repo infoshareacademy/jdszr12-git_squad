@@ -18,8 +18,8 @@ Prezentacja powstała w oparciu o narzędzia:
 * Microsoft Powerpoint
 	
 ## Autorzy
-* Krzemińska Anna
-* Licau Jarosław
-* Lipiszko Maciej
-* Nowak Ula
-* Tkaczyk Paulina
+* Anna K.
+* Jarosław L.
+* Maciej L.
+* Ula N.
+* Paulina T.
