@@ -1,146 +1,40 @@
+-- Code that creates a new table city_pairwise from tables city_country_coordinates and citypairwise
 
-------------------------------------------------
----- WARUNEK USUWAJACY ZEROWE POLACZENIA
-------------------------------------------------
+-- citypairwise.csv from kaggle rajanand international-air-traffic-from-and-to-india
 
-select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0;
+-- city_country_coordinates is a file/table with corrected character encoding and with 2 columns removed (original file placed on different branch: https://github.com/infoshareacademy/jdszr12-git_squad/blob/Ula/CITY_COUNTRY_Coordinates%20.csv)
 
---------------------------------------------------------------
-----5 NAJWIEKSZYCH LOTNISK (POD WZGLEDEM RUCHU PASAZERSKIEGO)
---------------------------------------------------------------
-DELHI, MUMBAI, CHENNAI, KOCHI, BENGALURU
+------------------------------
+-- Creating main table city_pairwise
 
-select  country2, city2, sum("PASSENGERS FROM CITY1 TO CITY2"), sum("PASSENGERS FROM CITY2 TO CITY1")  from 
+create table city_pairwise as (
+select cc.country as country1, c.city1, cc.latitude as latitude1, cc.longitude as longitude1,
+ccc.country as country2, c.city2, ccc.latitude as latitude2, ccc.longitude as longitude2,
+c."YEAR", c.quarter, c."PASSENGERS FROM CITY1 TO CITY2", c."PASSENGERS FROM CITY2 TO CITY1",
+c."FREIGHT FROM CITY1 TO CITY2", c."FREIGHT FROM CITY2 TO CITY1"
+from citypairwise c
+left join city_country_coordinates cc on c.city1 = cc.city_name
+left join city_country_coordinates ccc on c.city2 = ccc.city_name
+);
 
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0) as q
+------------------------------
+-- city_pairwise definition
 
-group by 1, 2   order by 4 DESC;
-
-
-
------------------
-----KWARTALNIE: SREDNIA MIN MAX DLA RUCHU PASAZERSKIEGO TOP5 vs CALOSC
------------------
-
-
------PRZYLOTY DO INDII:
------ dla TOP5 dla wlatujących dla Indii
-select city2, "YEAR" ,quarter, 
-	min("PASSENGERS FROM CITY1 TO CITY2") as minimum,
-	max("PASSENGERS FROM CITY1 TO CITY2") as maximum,
-	round(avg("PASSENGERS FROM CITY1 TO CITY2"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2, 3 order by 1, 2 , 3;
-
-
----- dla wszystkich dla wlatujacych do Indii
-select city2, "YEAR" ,quarter, 
-	min("PASSENGERS FROM CITY1 TO CITY2") as minimum,
-	max("PASSENGERS FROM CITY1 TO CITY2") as maximum,
-	round(avg("PASSENGERS FROM CITY1 TO CITY2"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2, 3 order by 1, 2 , 3;
-
-
-
-----WYLOTY Z INDII:
-
------ dla TOP5 dla wylatujacych z Indii
-select city2, "YEAR" ,quarter, 
-	min("PASSENGERS FROM CITY2 TO CITY1") as minimum,
-	max("PASSENGERS FROM CITY2 TO CITY1") as maximum,
-	round(avg("PASSENGERS FROM CITY2 TO CITY1"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2, 3 order by 1, 2 , 3;
-
-
----- dla wszystkich dla wylatujacych z Indii
-select city2, "YEAR" ,quarter, 
-	min("PASSENGERS FROM CITY2 TO CITY1") as minimum,
-	max("PASSENGERS FROM CITY2 TO CITY1") as maximum,
-	round(avg("PASSENGERS FROM CITY2 TO CITY1"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2, 3 order by 1, 2 , 3;
-
-
-
-
------------------
-----ROCZNIE: SREDNIA MIN MAX DLA RUCHU PASAZERSKIEGO TOP5 vs CALOSC
------------------
-
-
------PRZYLOTY DO INDII:
------ dla TOP5 dla wlatujących dla Indii
-select city2, "YEAR" , 
-	min("PASSENGERS FROM CITY1 TO CITY2") as minimum,
-	max("PASSENGERS FROM CITY1 TO CITY2") as maximum,
-	round(avg("PASSENGERS FROM CITY1 TO CITY2"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2 order by 1, 2 ;
-
-
----- dla wszystkich dla wlatujacych do Indii
-select city2, "YEAR" , 
-	min("PASSENGERS FROM CITY1 TO CITY2") as minimum,
-	max("PASSENGERS FROM CITY1 TO CITY2") as maximum,
-	round(avg("PASSENGERS FROM CITY1 TO CITY2"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2 order by 1, 2;
-
-
-----WYLOTY Z INDII:
-
------ dla TOP5 dla wylatujacych z Indii
-select city2, "YEAR",
-	min("PASSENGERS FROM CITY2 TO CITY1") as minimum,
-	max("PASSENGERS FROM CITY2 TO CITY1") as maximum,
-	round(avg("PASSENGERS FROM CITY2 TO CITY1"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2 order by 1, 2;
-
-
----- dla wszystkich dla wylatujacych z Indii
-select city2, "YEAR" , 
-	min("PASSENGERS FROM CITY2 TO CITY1") as minimum,
-	max("PASSENGERS FROM CITY2 TO CITY1") as maximum,
-	round(avg("PASSENGERS FROM CITY2 TO CITY1"),0) as srednia
-
-from
-(select * from city_pairwise cp 
-where "PASSENGERS FROM CITY1 TO CITY2" != 0 and "PASSENGERS FROM CITY2 TO CITY1" != 0 and "FREIGHT FROM CITY1 TO CITY2" !=0 and "FREIGHT FROM CITY2 TO CITY1" != 0
-and city2 like 'DELHI' or city2 like 'MUMBAI' or city2 like 'CHENNAI' or city2 like 'KOCHI' or city2 like 'BENGALURU') as q
-group by 1, 2 order by 1, 2 ;
-
-
-
+-- Drop table
+-- DROP TABLE public.city_pairwise;
+-- CREATE TABLE public.city_pairwise (
+--      country1 varchar(50) NOT NULL,
+--      city1 varchar(50) NOT NULL,
+--      latitude1 float4 NOT NULL,
+--      longitude1 float4 NOT NULL,
+--      country2 varchar(50) NOT NULL,
+--      city2 varchar(50) NOT NULL,
+--      latitude2 float4 NOT NULL,
+--      longitude2 float4 NOT NULL,
+--      "YEAR" int4 NOT NULL,
+--      quarter varchar(50) NOT NULL,
+--      "PASSENGERS FROM CITY1 TO CITY2" int4 NOT NULL,
+--      "PASSENGERS FROM CITY2 TO CITY1" int4 NOT NULL,
+--      "FREIGHT FROM CITY1 TO CITY2" float4 NOT NULL,
+--      "FREIGHT FROM CITY2 TO CITY1" float4 NOT NULL
+-- );
