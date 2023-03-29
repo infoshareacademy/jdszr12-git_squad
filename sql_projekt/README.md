@@ -1,5 +1,3 @@
-# jdszr12-git_squad
-
 # TOP 5 Połączeń lotniczych w Indiach (2015 i 2016)
 
 ## Zawartość
