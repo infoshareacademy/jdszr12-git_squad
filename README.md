@@ -1,22 +1,13 @@
 # jdszr12-git_squad
 
-# TOP 5 Połączeń lotniczych w Indiach (2015 i 2016)
+## SQL Projekt
 
-## Zawartość
-* [Ogólne](#ogolne)
-* [Wykorzystane narzędzia](#wykorzystane-narzedzia)
-* [Autorzy](#autorzy)
+[TOP 5 Połączeń lotniczych w Indiach (2015 i 2016)](https://github.com/infoshareacademy/jdszr12-git_squad/tree/main/sql_projekt)
 
-## Ogólne
-Projekt oceniający popularność i atrakcyjność lotnisk w Indiach, w latach 2015 i 2016. Selekcja została dokonana w oparciu o tabele przedstawiającą połączenia z i do miast w Indiach. Plik `csv` zawierający nieobrobione dane znajduje się w serwisie kaggle.com pod adresem:
-https://www.kaggle.com/datasets/rajanand/international-air-traffic-from-and-to-india
+## Python Projekt
 
-## Wykorzystane narzędzia
-Prezentacja powstała w oparciu o narzędzia:
-* Postgresql
-* Tableau
-* Microsoft Powerpoint
-	
+[Dachy Paryża - analiza mieszkań w Paryżu](https://github.com/infoshareacademy/jdszr12-git_squad/tree/main/py_projekt)
+
 ## Autorzy
 * Anna K.
 * Jarosław L.
