@@ -6,7 +6,7 @@
 * [Autorzy](#autorzy)
 
 ## Ogólne
-Projekt analizyjący mieszkania w Paryżu. Plik `csv` zawierający nieobrobione dane znajduje się w serwisie [kaggle.com](https://www.kaggle.com/datasets/mssmartypants/paris-housing-price-prediction) pod adresem:
+Projekt analizyjący mieszkania w Paryżu. Plik `csv` zawierający nieobrobione dane znajduje się w serwisie [kaggle.com](https://www.kaggle.com/datasets/mssmartypants/paris-housing-price-prediction)
 
 ## Wykorzystane narzędzia
 Prezentacja powstała w oparciu o narzędzia:
