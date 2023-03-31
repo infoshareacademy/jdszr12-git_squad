@@ -12,5 +12,5 @@
 * Anna K.
 * Jarosław L.
 * Maciej L.
-* Ula N.
+* Urszula N.
 * Paulina T.

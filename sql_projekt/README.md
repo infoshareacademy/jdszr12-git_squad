@@ -18,5 +18,5 @@ Prezentacja powstała w oparciu o narzędzia:
 * Anna K.
 * Jarosław L.
 * Maciej L.
-* Ula N.
+* Urszula N.
 * Paulina T.
