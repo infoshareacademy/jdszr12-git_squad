@@ -6,7 +6,7 @@
 
 ## Python Projekt
 
-[Dachy Paryża - analiza mieszkań w Paryżu](https://github.com/infoshareacademy/jdszr12-git_squad/tree/main/py_projekt)
+[Katastrofa klimatyczna - analiza danych dotyczących zmian średnich temperatur](https://github.com/infoshareacademy/jdszr12-git_squad/tree/main/py_projekt)
 
 ## Autorzy
 * Anna K.
