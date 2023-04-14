@@ -162,6 +162,8 @@ jaro.iloc[:,-59:].isna().sum()
 
 
 # Making individual variable for group purpose working
+
+#DataFrame with 5 countries from America (Northern & Central)
 anna = df.copy()
 anna1 = optional_1(anna)
 anna2 = anna1[(anna1.Continent== 'North America')]
@@ -170,16 +172,35 @@ anna3 = anna2[(anna2.Area == 'Greenland')
              |(anna2.Area == 'Cuba')
              |(anna2.Area == 'Haiti')
              |(anna2.Area == 'Dominican Republic')]
+anna3 = anna3[(anna2.Months == 'Meteorological year')
+              & (anna2.Element == 'Temperature change')]
+anna3
 # In[ ]:
 anna3.isnull().sum()
 # In[ ]:
-anna4 = anna[(anna.Area == 'Norther America')
+#DataFrame with continents
+anna4 = anna[(anna.Area == 'Northern America')
              | (anna.Area == 'Central America')]
+anna4 = anna4[(anna.Months == 'Meteorological year')
+              & (anna.Element == 'Temperature change')]
+anna4
+
 # In[]:
 anna4.isnull().sum()
 # In[ ]:
 
-
+anna5 = pd.concat([anna4, anna3])
+anna5
+# Inp[]:
+del anna5['Area_Code']
+del anna5['Months_Code']
+del anna5['Months']
+del anna5['Element']
+del anna5['Unit']
+del anna5['Element_Code']
+del anna5['Continent']
+del anna5['Continent_Code']
+anna5
 
 
 
