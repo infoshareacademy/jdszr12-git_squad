@@ -74,6 +74,8 @@ df['Area'] = df['Area'].str.replace('\"','')
 
 def optional_1(df):
     continent = pd.read_csv("_Countries_Continents.csv", names=['Area', 'Contintnt', 'Contintnt_Code'], encoding="UTF-8")
+    continent = continent.rename(columns={'Contintnt':'Continent',
+                                          'Contintnt_Code': 'Continent_Code'})
     df = pd.merge(left=continent, right=df, on='Area', how='inner')
     return df
 
@@ -161,9 +163,23 @@ jaro.iloc[:,-59:].isna().sum()
 
 # Making individual variable for group purpose working
 anna = df.copy()
-
-
+anna1 = optional_1(anna)
+anna2 = anna1[(anna1.Continent== 'North America')]
+anna3 = anna2[(anna2.Area == 'Greenland')
+             |(anna2.Area == 'United States of America')
+             |(anna2.Area == 'Cuba')
+             |(anna2.Area == 'Haiti')
+             |(anna2.Area == 'Dominican Republic')]
 # In[ ]:
+anna3.isnull().sum()
+# In[ ]:
+anna4 = anna[(anna.Area == 'Norther America')
+             | (anna.Area == 'Central America')]
+# In[]:
+anna4.isnull().sum()
+# In[ ]:
+
+
 
 
 
