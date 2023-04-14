@@ -203,13 +203,49 @@ del anna5['Continent']
 del anna5['Continent_Code']
 anna5
 
-#Inp[]:
+#In[]:
 # Transformation table
 anna6 = pd.melt(anna5, id_vars='Area')
 anna6 = anna6.rename(columns={'variable':'Year',
                          'value':'Temp'})
 anna6 = anna6.sort_values(by=['Area', 'Year'])
 anna6
+
+#In[]:
+#DataFrame with Forests
+forest = pd.read_csv('forest.csv')
+forest = forest[(forest.country_name == 'Canada')
+       |(forest.country_name == 'United States')
+       |(forest.country_name == 'Cuba')
+       |(forest.country_name == 'Haiti')
+       |(forest.country_name == 'Dominican Republic')]
+
+forest = forest.rename(columns={'year':'Year',
+                         'country_name':'Area',
+                         'value':'Forest'})
+
+del forest['country_code']
+forest.isnull().sum()
+forest
+       
+#In[]:
+#DataFrame with CO2
+co2 = pd.read_csv('co2.csv')
+co2 = co2[(co2.country_name == 'Canada')
+       |(co2.country_name == 'United States')
+       |(co2.country_name == 'Cuba')
+       |(co2.country_name == 'Haiti')
+       |(co2.country_name == 'Dominican Republic')]
+
+co2 = co2.rename(columns={'year':'Year',
+                        'country_name':'Area',
+                      'value':'CO2'})
+
+del co2['country_code']
+
+co2.isnull().sum()
+
+co2
 
 
 
