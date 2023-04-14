@@ -192,6 +192,7 @@ anna4.isnull().sum()
 anna5 = pd.concat([anna4, anna3])
 anna5
 # Inp[]:
+anna5.columns = anna5.columns.str.replace('Y', '')
 del anna5['Area_Code']
 del anna5['Months_Code']
 del anna5['Months']
@@ -201,6 +202,15 @@ del anna5['Element_Code']
 del anna5['Continent']
 del anna5['Continent_Code']
 anna5
+
+#Inp[]:
+# Transformation table
+anna6 = pd.melt(anna5, id_vars='Area')
+anna6 = anna6.rename(columns={'variable':'Year',
+                         'value':'Temp'})
+anna6 = anna6.sort_values(by=['Area', 'Year'])
+anna6
+
 
 
 
