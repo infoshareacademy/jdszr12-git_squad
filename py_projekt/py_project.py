@@ -2,9 +2,9 @@
 # coding: utf-8
 
 # # Climate catastrophe
-# 
+#
 # ## Data analysis on changes in average temperatures
-# 
+#
 # Project analyzing data on changes in average temperatures. The `csv` file containing the raw data can be found at [kaggle.com](https://www.kaggle.com/datasets/sevgisarac/temperature-change)
 
 # ### Import
@@ -32,9 +32,10 @@ pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 
 # Default DataFrame
-df = pd.read_csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv", encoding="Windows-1250") #index_col=False
+df = pd.read_csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv",
+                 encoding="Windows-1250")  # index_col=False
 
-#df.head(1)
+# df.head(1)
 
 
 # In[ ]:
@@ -56,10 +57,10 @@ df = df.rename(columns={"Area Code": "Area_Code",
 
 
 # Replacing comas in string
-df['Area'] = df['Area'].str.replace(',','')
+df['Area'] = df['Area'].str.replace(',', '')
 
 # Replacing quote in string
-df['Area'] = df['Area'].str.replace('\"','')
+df['Area'] = df['Area'].str.replace('\"', '')
 
 
 # In[ ]:
@@ -73,9 +74,10 @@ df['Area'] = df['Area'].str.replace('\"','')
 # (every rows containing geo-region name will not stay in df)
 
 def optional_1(df):
-    continent = pd.read_csv("_Countries_Continents.csv", names=['Area', 'Contintnt', 'Contintnt_Code'], encoding="UTF-8")
-    continent = continent.rename(columns={'Contintnt':'Continent',
-                                          'Contintnt_Code': 'Continent_Code'})
+    continent = pd.read_csv("_Countries_Continents.csv", names=[
+                            'Area', 'Continent', 'Continent_Code'], encoding="UTF-8")
+    # continent = continent.rename(columns={'Contintnt':'Continent',
+    #                                      'Contintnt_Code': 'Continent_Code'})
     df = pd.merge(left=continent, right=df, on='Area', how='inner')
     return df
 
@@ -93,67 +95,293 @@ def optional_1(df):
 def optional_2(df):
     df = df.loc[(df['Element_Code'] == 7271) & (df['Area_Code'] < 5000)]
     for i in range(df.shape[0]-1):
-        m = round(df.iloc[i,-59:].mean(),3)
-        df.iloc[i,-59:] = df.iloc[i,-59:].fillna(m)
+        m = round(df.iloc[i, -59:].mean(), 3)
+        df.iloc[i, -59:] = df.iloc[i, -59:].fillna(m)
     return df
 
 
 # #### JARO
 
+# #### Displayng all rows in dataframe
+# `pd.set_option('display.max_rows', None)`
+
+# In[ ]:
+
+
+jaro1 = df.copy()
+
+
 # In[ ]:
 
 
-# Displayng all rows in dataframe
-# pd.set_option('display.max_rows', None)
+jaro1.columns = jaro1.columns.str.replace('Y', '')
+
+
+# #### Whole World temperatures (1961-2019)
+
+# In[ ]:
+
+
+world_t = jaro1.loc[(jaro1['Area_Code'] == 5000) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# world_t.iloc[:,-59:].isna().sum()
+world_t_ok = world_t.iloc[:, -59:]
+
+
+# #### Africa temperatures (1961-2019)
+
+# In[ ]:
+
+
+africa_t = jaro1.loc[(jaro1['Area_Code'] == 5100) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# africa_t.iloc[:,-59:].isna().sum()
+africa_t_ok = africa_t.iloc[:, -59:]
+
+
+# #### Caribbean, Northern & Central Americas temperatures (1961-2019)
+
+# In[ ]:
+
+
+north_america_t = jaro1.loc[((jaro1['Area_Code'] == 5203) | (jaro1['Area_Code'] == 5204) | (jaro1['Area_Code'] == 5206))
+                            & (jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# north_america_t.iloc[:,-59:].isna().sum()
+north_america_t_ok = north_america_t.iloc[:, -59:].mean()
+
+
+# #### South America temperatures (1961-2019)
+
+# In[ ]:
+
+
+south_america_t = jaro1.loc[(jaro1['Area_Code'] == 5207) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# south_america_t.iloc[:,-59:].isna().sum()
+south_america_t_ok = south_america_t.iloc[:, -59:]
+
+
+# #### Asia temperatures (1961-2019)
+
+# In[ ]:
+
+
+asia_t = jaro1.loc[(jaro1['Area_Code'] == 5300) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# asia_t.iloc[:,-59:].isna().sum()
+asia_t_ok = asia_t.iloc[:, -59:]
+
+
+# #### Europe temperatures (1961-2019)
+
+# In[ ]:
+
+
+europe_t = jaro1.loc[(jaro1['Area_Code'] == 5400) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# europe_t.iloc[:,-59:].isna().sum()
+europe_t_ok = europe_t.iloc[:, -59:]
+
+
+# #### Oceania temperatures (1961-2019)
+
+# In[ ]:
+
+
+oceania_t = jaro1.loc[(jaro1['Area_Code'] == 5500) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# oceania_t.iloc[:,-59:].isna().sum()
+oceania_t_ok = oceania_t.iloc[:, -59:]
+
+
+# #### Antarctica temperatures (1961-2019)
+
+# In[ ]:
+
+
+antarctica_t = jaro1.loc[(jaro1['Area_Code'] == 30) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# oceania_t.iloc[:,-59:].isna().sum()
+antarctica_t_ok = antarctica_t.iloc[:, -59:]
+
+# In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = africa_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='Africa')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
 
 
 # In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = north_america_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='North America')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
+
+# In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = south_america_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='South America')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
+
+# In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = asia_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='Asia')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
+
+# In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = europe_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='Europe')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
+
+# In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = oceania_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='Oceania')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
+
+# In[ ]:
+
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = antarctica_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='Antarctica')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
 
 
 # Using 'Optional 1'
+
+# In[ ]:
+
+
 jaro = optional_1(df)
 jaro.shape
 
 
+# Removing specific rows, leaving only those where:<br>
+# 1. 'Months_Code' is 'Meteorological year'<br>
+# 2. 'Element_Code' is 'Temperature change'<br>
+# 3. 'Area_Code' < 5000 means only countries (not regions name)
+
 # In[ ]:
 
 
-# Removing specific rows, leaving only those where:
-# 1. 'Months_Code' is 'Meteorological year'
-# 2. 'Element_Code' is 'Temperature change'
-# 3. 'Area_Code' < 5000 means only countries (not regions name)
-jaro = jaro.loc[(jaro['Months_Code'] == 7020) & (jaro['Element_Code'] == 7271) & (jaro['Area_Code'] < 5000)]
+jaro = jaro.loc[(jaro['Months_Code'] == 7020) & (
+    jaro['Element_Code'] == 7271) & (jaro['Area_Code'] < 5000)]
 jaro.shape
 
 
+# Using 'Optional 2'
+
 # In[ ]:
 
 
-# Using 'Optional 2'
 jaro = optional_2(jaro)
 jaro.shape
 
 
-# In[ ]:
-
-
-# If optional_1() and/or optional_2() isn't choosen then start from here:
+# #### If optional_1() and/or optional_2() isn't choosen then start from here:
 
 # Making individual variable for group purpose working
 
-#jaro = df.copy()
+# In[ ]:
+
+
+jaro = df.copy()
 
 
 # In[ ]:
 
 
-jaro.iloc[:,-59:].isna().sum()
-
-
-# In[ ]:
-
-
-
+jaro.iloc[:, -59:].isna().sum()
 
 
 # #### ANNA
@@ -163,22 +391,22 @@ jaro.iloc[:,-59:].isna().sum()
 
 # Making individual variable for group purpose working
 
-#DataFrame with 5 countries from America (Northern & Central)
+# DataFrame with 5 countries from America (Northern & Central)
 anna = df.copy()
 anna1 = optional_1(anna)
-anna2 = anna1[(anna1.Continent== 'North America')]
+anna2 = anna1[(anna1.Continent == 'North America')]
 anna3 = anna2[(anna2.Area == 'Greenland')
-             |(anna2.Area == 'United States of America')
-             |(anna2.Area == 'Cuba')
-             |(anna2.Area == 'Haiti')
-             |(anna2.Area == 'Dominican Republic')]
+              | (anna2.Area == 'United States of America')
+              | (anna2.Area == 'Cuba')
+              | (anna2.Area == 'Haiti')
+              | (anna2.Area == 'Dominican Republic')]
 anna3 = anna3[(anna2.Months == 'Meteorological year')
               & (anna2.Element == 'Temperature change')]
 anna3
 # In[ ]:
 anna3.isnull().sum()
 # In[ ]:
-#DataFrame with continents
+# DataFrame with continents
 anna4 = anna[(anna.Area == 'Northern America')
              | (anna.Area == 'Central America')]
 anna4 = anna4[(anna.Months == 'Meteorological year')
@@ -203,53 +431,49 @@ del anna5['Continent']
 del anna5['Continent_Code']
 anna5
 
-#In[]:
+# In[]:
 # Transformation table
 anna6 = pd.melt(anna5, id_vars='Area')
-anna6 = anna6.rename(columns={'variable':'Year',
-                         'value':'Temp'})
+anna6 = anna6.rename(columns={'variable': 'Year',
+                              'value': 'Temp'})
 anna6 = anna6.sort_values(by=['Area', 'Year'])
 anna6
 
-#In[]:
-#DataFrame with Forests
+# In[]:
+# DataFrame with Forests
 forest = pd.read_csv('forest.csv')
 forest = forest[(forest.country_name == 'Canada')
-       |(forest.country_name == 'United States')
-       |(forest.country_name == 'Cuba')
-       |(forest.country_name == 'Haiti')
-       |(forest.country_name == 'Dominican Republic')]
+                | (forest.country_name == 'United States')
+                | (forest.country_name == 'Cuba')
+                | (forest.country_name == 'Haiti')
+                | (forest.country_name == 'Dominican Republic')]
 
-forest = forest.rename(columns={'year':'Year',
-                         'country_name':'Area',
-                         'value':'Forest'})
+forest = forest.rename(columns={'year': 'Year',
+                                'country_name': 'Area',
+                                'value': 'Forest'})
 
 del forest['country_code']
 forest.isnull().sum()
 forest
-       
-#In[]:
-#DataFrame with CO2
+
+# In[]:
+# DataFrame with CO2
 co2 = pd.read_csv('co2.csv')
 co2 = co2[(co2.country_name == 'Canada')
-       |(co2.country_name == 'United States')
-       |(co2.country_name == 'Cuba')
-       |(co2.country_name == 'Haiti')
-       |(co2.country_name == 'Dominican Republic')]
+          | (co2.country_name == 'United States')
+          | (co2.country_name == 'Cuba')
+          | (co2.country_name == 'Haiti')
+          | (co2.country_name == 'Dominican Republic')]
 
-co2 = co2.rename(columns={'year':'Year',
-                        'country_name':'Area',
-                      'value':'CO2'})
+co2 = co2.rename(columns={'year': 'Year',
+                          'country_name': 'Area',
+                          'value': 'CO2'})
 
 del co2['country_code']
 
 co2.isnull().sum()
 
 co2
-
-
-
-
 
 
 # #### MATTHIAS
@@ -264,9 +488,6 @@ mateo = df.copy()
 # In[ ]:
 
 
-
-
-
 # #### PAULINA
 
 # In[ ]:
@@ -279,9 +500,6 @@ pauli = df.copy()
 # In[ ]:
 
 
-
-
-
 # #### URSULA
 
 # In[ ]:
@@ -292,7 +510,3 @@ urs = df.copy()
 
 
 # In[ ]:
-
-
-
-
