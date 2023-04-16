@@ -220,6 +220,7 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
+plt.show()
 
 
 # In[ ]:
@@ -238,6 +239,7 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
+plt.show()
 
 
 # In[ ]:
@@ -256,6 +258,7 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
+plt.show()
 
 
 # In[ ]:
@@ -274,6 +277,7 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
+plt.show()
 
 
 # In[ ]:
@@ -292,7 +296,7 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
-plt.show();
+plt.show()
 
 
 # In[ ]:
@@ -311,6 +315,7 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
+plt.show()
 
 
 # In[ ]:
