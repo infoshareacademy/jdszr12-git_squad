@@ -519,7 +519,7 @@ asia['Area'] = asia['Area'].str.replace("'" ,' ')
 # Dataframe 5 Asia countries
 
 asia_5=asia[(asia.Area=='Afghanistan') | (asia.Area=='Saudi Arabia') | (asia.Area=='India') |
-             (asia.Area=='Democratic People s Republic of Korea') | (asia.Area=='China')]
+             (asia.Area=='Republic of Korea') | (asia.Area=='China')]
 
 # In[ ]:
 
@@ -537,16 +537,16 @@ x=asia_5.columns[1:].T
 
 y1=asia_5.iloc[0,-59:].values.T # Afganistan
 y2=asia_5.iloc[1,-59:].values.T #China
-y3=asia_5.iloc[2,-59:].values.T #South Korea
-y4=asia_5.iloc[3,-59:].values.T #India
+y3=asia_5.iloc[2,-59:].values.T #India                  
+y4=asia_5.iloc[3,-59:].values.T #South Korea
 y5=asia_5.iloc[4,-59:].values.T #Arabia
 
 # In[ ]:
 
 plt.plot(x, y1, label='Afganistan')
 plt.plot(x, y2, label='Chiny')
-plt.plot(x, y3, label='South Korea')
-plt.plot(x, y4, label='Indie')
+plt.plot(x, y3, label='Indie')
+plt.plot(x, y4, label='South Korea')   
 plt.plot(x, y5, label='Arabia')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5)
