@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Climate catastrophe
 #
 # ## Data analysis on changes in average temperatures
@@ -127,6 +124,7 @@ world_t = jaro1.loc[(jaro1['Area_Code'] == 5000) & (
 # world_t.iloc[:,-59:].isna().sum()
 world_t_ok = world_t.iloc[:, -59:]
 
+# #### Africa temperatures (1961-2019)
 
 # #### Africa temperatures (1961-2019)
 
@@ -149,7 +147,6 @@ north_america_t = jaro1.loc[((jaro1['Area_Code'] == 5203) | (jaro1['Area_Code'] 
 # north_america_t.iloc[:,-59:].isna().sum()
 north_america_t_ok = north_america_t.iloc[:, -59:].mean()
 
-
 # #### South America temperatures (1961-2019)
 
 # In[ ]:
@@ -160,8 +157,8 @@ south_america_t = jaro1.loc[(jaro1['Area_Code'] == 5207) & (
 # south_america_t.iloc[:,-59:].isna().sum()
 south_america_t_ok = south_america_t.iloc[:, -59:]
 
-
 # #### Asia temperatures (1961-2019)
+
 
 # In[ ]:
 
@@ -170,7 +167,6 @@ asia_t = jaro1.loc[(jaro1['Area_Code'] == 5300) & (
     jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
 # asia_t.iloc[:,-59:].isna().sum()
 asia_t_ok = asia_t.iloc[:, -59:]
-
 
 # #### Europe temperatures (1961-2019)
 
@@ -222,7 +218,6 @@ plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
 
-
 # In[ ]:
 
 
@@ -240,7 +235,6 @@ plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
-
 
 # In[ ]:
 
@@ -260,7 +254,6 @@ plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
 
-
 # In[ ]:
 
 
@@ -278,7 +271,6 @@ plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
-
 
 # In[ ]:
 
@@ -298,7 +290,6 @@ plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
 
-
 # In[ ]:
 
 
@@ -316,7 +307,6 @@ plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
-
 
 # In[ ]:
 
@@ -336,13 +326,13 @@ plt.title('Temperatures (1961-2019)')
 plt.legend()
 plt.show()
 
-
 # Using 'Optional 1'
 
 # In[ ]:
 
 
 jaro = optional_1(df)
+jaro.columns = jaro.columns.str.replace('Y', '')
 jaro.shape
 
 
@@ -352,7 +342,6 @@ jaro.shape
 # 3. 'Area_Code' < 5000 means only countries (not regions name)
 
 # In[ ]:
-
 
 jaro = jaro.loc[(jaro['Months_Code'] == 7020) & (
     jaro['Element_Code'] == 7271) & (jaro['Area_Code'] < 5000)]
@@ -377,12 +366,15 @@ jaro.shape
 
 jaro = df.copy()
 
+antarctica_t = jaro1.loc[(jaro1['Area_Code'] == 30) & (
+    jaro1['Element_Code'] == 7271) & (jaro1['Months_Code'] == 7020)]
+# oceania_t.iloc[:,-59:].isna().sum()
+antarctica_t_ok = antarctica_t.iloc[:, -59:]
 
 # In[ ]:
 
 
 jaro.iloc[:, -59:].isna().sum()
-
 
 # #### ANNA
 
@@ -476,6 +468,7 @@ co2.isnull().sum()
 co2
 
 
+
 # #### MATTHIAS
 
 # In[ ]:
@@ -483,6 +476,8 @@ co2
 
 # Making individual variable for group purpose working
 mateo = df.copy()
+
+# DataFrame with 5 countries from America (Northern & Central)
 
 mateo1=optional_1(mateo)
 
@@ -494,6 +489,22 @@ mateo1=optional_1(mateo)
 asia=mateo1[(mateo1.Continent_Code==2) & (mateo1.Months_Code==7020) & (mateo1.Element_Code==7271)]
 
 # In[ ]:
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+y2 = europe_t_ok.values.T
+
+plt.plot(x, y1, label='World')
+plt.plot(x, y2, label='Europe')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
 
 # Droping unnecessary columns
 
@@ -508,13 +519,14 @@ asia=asia.drop(columns=['Continent',
 
 # In[ ]:
 
+
 # Repalcing unnecessary marks with space
 
 asia.columns=asia.columns.str.replace('Y', '')
 asia['Area'] = asia['Area'].str.replace("'" ,' ')
 
+# In[ ]:
 
-#In[ ]:
 
 # Dataframe 5 Asia countries
 
@@ -525,7 +537,7 @@ asia_5=asia[(asia.Area=='Afghanistan') | (asia.Area=='Saudi Arabia') | (asia.Are
 
 asia_5.isnull().sum()
 
-# IN[ ]:
+# In[ ]:
 
 # X axis from columns 
 
