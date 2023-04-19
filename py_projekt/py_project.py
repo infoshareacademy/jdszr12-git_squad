@@ -73,8 +73,7 @@ df['Area'] = df['Area'].str.replace('\"', '')
 def optional_1(df):
     continent = pd.read_csv("_Countries_Continents.csv", names=[
                             'Area', 'Continent', 'Continent_Code'], encoding="UTF-8")
-    # continent = continent.rename(columns={'Contintnt':'Continent',
-    #                                      'Contintnt_Code': 'Continent_Code'})
+   
     df = pd.merge(left=continent, right=df, on='Area', how='inner')
     return df
 
@@ -385,87 +384,117 @@ jaro.iloc[:, -59:].isna().sum()
 
 # DataFrame with 5 countries from America (Northern & Central)
 anna = df.copy()
-anna1 = optional_1(anna)
-anna2 = anna1[(anna1.Continent == 'North America')]
-anna3 = anna2[(anna2.Area == 'Greenland')
-              | (anna2.Area == 'United States of America')
-              | (anna2.Area == 'Cuba')
-              | (anna2.Area == 'Haiti')
-              | (anna2.Area == 'Dominican Republic')]
-anna3 = anna3[(anna2.Months == 'Meteorological year')
-              & (anna2.Element == 'Temperature change')]
-anna3
+anna_t = optional_1(anna)
+anna_t_full= anna_t [(anna_t.Continent == 'North America')]
+anna_t_c5 = anna_t_full[(anna_t_full.Area == 'Greenland')
+              | (anna_t_full.Area == 'United States of America')
+         
+              | (anna_t_full.Area == 'Dominican Republic')]
+anna_t_c5 = anna_t_c5[(anna_t_c5.Months == 'Meteorological year')
+              & (anna_t_c5.Element == 'Temperature change')]
+anna_t_c5
 # In[ ]:
-anna3.isnull().sum()
+anna_t_c5.isnull().sum()
 # In[ ]:
 # DataFrame with continents
-anna4 = anna[(anna.Area == 'Northern America')
-             | (anna.Area == 'Central America')]
-anna4 = anna4[(anna.Months == 'Meteorological year')
-              & (anna.Element == 'Temperature change')]
-anna4
+#anna_t_cont = anna_t[(anna.Area == 'Northern America')
+#             | (anna.Area == 'Central America')]
+#anna_t_cont = anna_t_cont[(anna_t_cont.Months == 'Meteorological year')
+#              & (anna_t_cont.Element == 'Temperature change')]
+#anna_t_cont
 
 # In[]:
-anna4.isnull().sum()
+#anna4.isnull().sum()
 # In[ ]:
 
-anna5 = pd.concat([anna4, anna3])
-anna5
+#anna5 = pd.concat([anna4, anna3])
+#anna5
 # Inp[]:
-anna5.columns = anna5.columns.str.replace('Y', '')
-del anna5['Area_Code']
-del anna5['Months_Code']
-del anna5['Months']
-del anna5['Element']
-del anna5['Unit']
-del anna5['Element_Code']
-del anna5['Continent']
-del anna5['Continent_Code']
-anna5
+#Preparing data
+anna_t_c5.columns = anna_t_c5.columns.str.replace('Y', '')
+del anna_t_c5['Area_Code']
+del anna_t_c5['Months_Code']
+del anna_t_c5['Months']
+del anna_t_c5['Element']
+del anna_t_c5['Unit']
+del anna_t_c5['Element_Code']
+del anna_t_c5['Continent']
+del anna_t_c5['Continent_Code']
+anna_t_c5
 
 # In[]:
 # Transformation table
-anna6 = pd.melt(anna5, id_vars='Area')
-anna6 = anna6.rename(columns={'variable': 'Year',
+anna_t_c5_trans = pd.melt(anna_t_c5, id_vars='Area')
+anna_t_c5_trans = anna_t_c5_trans.rename(columns={'variable': 'Year',
                               'value': 'Temp'})
-anna6 = anna6.sort_values(by=['Area', 'Year'])
-anna6
+anna_t_c5_trans = anna_t_c5_trans.sort_values(by=['Area', 'Year'])
+anna_t_c5_trans.Year = pd.to_numeric(anna_t_c5_trans.Year)
+anna_t_c5_trans.info()
 
 # In[]:
 # DataFrame with Forests
-forest = pd.read_csv('forest.csv')
-forest = forest[(forest.country_name == 'Canada')
-                | (forest.country_name == 'United States')
-                | (forest.country_name == 'Cuba')
-                | (forest.country_name == 'Haiti')
-                | (forest.country_name == 'Dominican Republic')]
+anna_forest = pd.read_csv('forest.csv')
+anna_forest = anna_forest[(anna_forest.country_name == 'Canada')
+                | (anna_forest.country_name == 'United States')
+            
+                | (anna_forest.country_name == 'Dominican Republic')]
 
-forest = forest.rename(columns={'year': 'Year',
+anna_forest = anna_forest.rename(columns={'year': 'Year',
                                 'country_name': 'Area',
                                 'value': 'Forest'})
 
-del forest['country_code']
-forest.isnull().sum()
-forest
+del anna_forest['country_code']
+anna_forest.Year = pd.to_numeric(anna_forest.Year)
+anna_forest.isnull().sum()
+anna_forest
 
 # In[]:
 # DataFrame with CO2
-co2 = pd.read_csv('co2.csv')
-co2 = co2[(co2.country_name == 'Canada')
-          | (co2.country_name == 'United States')
-          | (co2.country_name == 'Cuba')
-          | (co2.country_name == 'Haiti')
-          | (co2.country_name == 'Dominican Republic')]
+anna_co2 = pd.read_csv('co2.csv')
+anna_co2 = anna_co2[(anna_co2.country_name == 'Canada')
+          | (anna_co2.country_name == 'United States')
+          | (anna_co2.country_name == 'Dominican Republic')]
 
-co2 = co2.rename(columns={'year': 'Year',
+anna_co2 = anna_co2.rename(columns={'year': 'Year',
                           'country_name': 'Area',
                           'value': 'CO2'})
 
-del co2['country_code']
+del anna_co2['country_code']
 
-co2.isnull().sum()
+anna_co2.isnull().sum()
 
-co2
+anna_co2.info()
+
+# In[]:
+# DataFrame with populationPKB
+anna_PKB = pd.read_csv('countriesPopPKB.csv')
+
+anna_PKB  = anna_PKB[(anna_PKB.Country == 'Canada')
+          | (anna_PKB.Country == 'United States')
+          | (anna_PKB.Country == 'Dominican Republic')]
+anna_PKB = anna_PKB.rename(columns={'Country': 'Area'})
+del anna_PKB['Region']
+
+
+
+
+#PKB.info()
+anna_PKB
+
+
+
+
+# In[]:
+# Join  temperature, forest & co2
+
+tf = pd.merge(anna_t_c5_trans, anna_forest, on =['Area','Year'], how = 'left')
+tfc = pd.merge(tf, anna_co2, on=['Area', 'Year'], how = 'left')
+tfc
+
+
+
+
+
 
 
 
