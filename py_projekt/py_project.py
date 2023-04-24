@@ -383,40 +383,37 @@ jaro.iloc[:, -59:].isna().sum()
 # Making individual variable for group purpose working
 
 # DataFrame with 5 countries from America (Northern & Central)
-anna = df.copy()
-anna_t = optional_1(anna)
-anna_t_full= anna_t [(anna_t.Continent == 'North America')]
-anna_t_c5 = anna_t_full[(anna_t_full.Area == 'Canada')
-              | (anna_t_full.Area == 'United States of America')
-         
-              | (anna_t_full.Area == 'Dominican Republic')]
-anna_t_c5 = anna_t_c5[(anna_t_c5.Months == 'Meteorological year')
-              & (anna_t_c5.Element == 'Temperature change')]
-anna_t_c5
-# In[ ]:
-anna_t_c5.isnull().sum()
+NAmerica = df.copy()
+NAmerica = optional_1(NAmerica)
+NAmerica_full= NAmerica [(NAmerica.Continent == 'North America')]
+NAmerica_c3 = NAmerica_full[(NAmerica_full.Area == 'Canada')
+              | (NAmerica_full.Area == 'United States of America')
+                | (NAmerica_full.Area == 'Dominican Republic')]
+NAmerica_c3 = NAmerica_c3[(NAmerica_c3.Months == 'Meteorological year')
+              & (NAmerica_c3.Element == 'Temperature change')]
+NAmerica_c3
 
 # Inp[]:
 #Preparing data
-anna_t_c5.columns = anna_t_c5.columns.str.replace('Y', '')
-del anna_t_c5['Area_Code']
-del anna_t_c5['Months_Code']
-del anna_t_c5['Months']
-del anna_t_c5['Element']
-del anna_t_c5['Unit']
-del anna_t_c5['Element_Code']
-del anna_t_c5['Continent']
-del anna_t_c5['Continent_Code']
-anna_t_c5
+NAmerica_c3.columns = NAmerica_c3.columns.str.replace('Y', '')
+del NAmerica_c3['Area_Code']
+del NAmerica_c3['Months_Code']
+del NAmerica_c3['Months']
+del NAmerica_c3['Element']
+del NAmerica_c3['Unit']
+del NAmerica_c3['Element_Code']
+del NAmerica_c3['Continent']
+del NAmerica_c3['Continent_Code']
+NAmerica_c3
 
 # In[]:
 # Transformation table
-anna_t_c5_trans = pd.melt(anna_t_c5, id_vars='Area')
-anna_t_c5_trans = anna_t_c5_trans.rename(columns={'variable': 'Year',
+NAmerica_trans = pd.melt(NAmerica_c3, id_vars='Area')
+NAmerica_trans = NAmerica_trans.rename(columns={'variable': 'Year',
                               'value': 'Temp'})
-anna_t_c5_trans = anna_t_c5_trans.sort_values(by=['Area', 'Year'])
-anna_t_c5_trans.Year = pd.to_numeric(anna_t_c5_trans.Year)
-anna_t_c5_trans.info()
+NAmerica_trans = NAmerica_trans.sort_values(by=['Area', 'Year'])
+NAmerica_trans.Year = pd.to_numeric(NAmerica_trans.Year)
+NAmerica_trans.info()
 
 # In[]:
 # DataFrame with Forests
@@ -724,17 +721,34 @@ plt.show()
 
 #In[]:
 ##Correlation_Algeria
-africa_tfcg.columns
+
 corr_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
 del corr_Algeria['Area']
 del corr_Algeria['Year']
 
 corr_Algeria = corr_Algeria.corr()
-corr_Algeria
 sns.heatmap(corr_Algeria, annot=True)
 plt.show()
 
+#In[]:
+##Correlation_Tanzania
+corr_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
+del corr_Tanzania['Area']
+del corr_Tanzania['Year']
 
+corr_Tanzania = corr_Tanzania.corr()
+sns.heatmap(corr_Tanzania, annot=True)
+plt.show()
+
+#In[]:
+##Correlation_Mozambique
+corr_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
+del corr_Mozambique['Area']
+del corr_Mozambique['Year']
+
+corr_Mozambique = corr_Mozambique.corr()
+sns.heatmap(corr_Mozambique, annot=True)
+plt.show()
 
 
 # #### MATTHIAS
