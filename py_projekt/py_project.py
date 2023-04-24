@@ -722,6 +722,18 @@ plt.title('GDP per capita(1961-2019)')
 plt.legend()
 plt.show()
 
+#In[]:
+##Correlation_Algeria
+africa_tfcg.columns
+corr_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
+del corr_Algeria['Area']
+del corr_Algeria['Year']
+
+corr_Algeria = corr_Algeria.corr()
+corr_Algeria
+sns.heatmap(corr_Algeria, annot=True)
+plt.show()
+
 
 
 
