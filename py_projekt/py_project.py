@@ -386,7 +386,7 @@ jaro.iloc[:, -59:].isna().sum()
 anna = df.copy()
 anna_t = optional_1(anna)
 anna_t_full= anna_t [(anna_t.Continent == 'North America')]
-anna_t_c5 = anna_t_full[(anna_t_full.Area == 'Greenland')
+anna_t_c5 = anna_t_full[(anna_t_full.Area == 'Canada')
               | (anna_t_full.Area == 'United States of America')
          
               | (anna_t_full.Area == 'Dominican Republic')]
@@ -395,20 +395,7 @@ anna_t_c5 = anna_t_c5[(anna_t_c5.Months == 'Meteorological year')
 anna_t_c5
 # In[ ]:
 anna_t_c5.isnull().sum()
-# In[ ]:
-# DataFrame with continents
-#anna_t_cont = anna_t[(anna.Area == 'Northern America')
-#             | (anna.Area == 'Central America')]
-#anna_t_cont = anna_t_cont[(anna_t_cont.Months == 'Meteorological year')
-#              & (anna_t_cont.Element == 'Temperature change')]
-#anna_t_cont
 
-# In[]:
-#anna4.isnull().sum()
-# In[ ]:
-
-#anna5 = pd.concat([anna4, anna3])
-#anna5
 # Inp[]:
 #Preparing data
 anna_t_c5.columns = anna_t_c5.columns.str.replace('Y', '')
@@ -443,6 +430,9 @@ anna_forest = anna_forest.rename(columns={'year': 'Year',
                                 'country_name': 'Area',
                                 'value': 'Forest'})
 
+anna_forest.replace(to_replace="United States",
+           value="United States of America", inplace=True)
+
 del anna_forest['country_code']
 anna_forest.Year = pd.to_numeric(anna_forest.Year)
 anna_forest.isnull().sum()
@@ -459,29 +449,14 @@ anna_co2 = anna_co2.rename(columns={'year': 'Year',
                           'country_name': 'Area',
                           'value': 'CO2'})
 
+anna_co2.replace(to_replace="United States",
+           value="United States of America", inplace=True)
+
 del anna_co2['country_code']
 
 anna_co2.isnull().sum()
 
 anna_co2.info()
-
-# In[]:
-# DataFrame with populationPKB
-anna_PKB = pd.read_csv('countriesPopPKB.csv')
-
-anna_PKB  = anna_PKB[(anna_PKB.Country == 'Canada')
-          | (anna_PKB.Country == 'United States')
-          | (anna_PKB.Country == 'Dominican Republic')]
-anna_PKB = anna_PKB.rename(columns={'Country': 'Area'})
-del anna_PKB['Region']
-
-
-
-
-#PKB.info()
-anna_PKB
-
-
 
 
 # In[]:
@@ -492,9 +467,52 @@ tfc = pd.merge(tf, anna_co2, on=['Area', 'Year'], how = 'left')
 tfc
 
 
+# In[]:
+## Temperature
+tfc_Canada = tfc[(tfc.Area == 'Canada')]
+tfc_US = tfc[(tfc.Area == 'United States of America')]
+tfc_Dominican = tfc[(tfc.Area == 'Dominican Republic')]
+plt.plot(tfc_Canada.Year, tfc_Canada.Temp, label = 'Kanada')
+plt.plot(tfc_US.Year, tfc_US.Temp, label = 'Stany Zjednoczone')
+plt.plot(tfc_Dominican.Year, tfc_Dominican.Temp, label = 'Dominikana')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Temperatura \u2103')
+plt.title('Zmiany temperatur (1961-2019)')
+plt.legend()
+plt.show()
 
+# In[]:
+## Forest
+tfc_Canada = tfc[(tfc.Area == 'Canada')]
+tfc_US = tfc[(tfc.Area == 'United States of America')]
+tfc_Dominican = tfc[(tfc.Area == 'Dominican Republic')]
+plt.plot(tfc_Canada.Year, tfc_Canada.Forest, label = 'Kanada')
+plt.plot(tfc_US.Year, tfc_US.Forest, label = 'Stany Zjednoczone')
+plt.plot(tfc_Dominican.Year, tfc_Dominican.Forest, label = 'Dominikana')
+plt.yscale('log')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Poziom zalesienia')
+plt.title('Zalesienie (1961-2019)')
+plt.legend()
+plt.show()
 
-
+# In[]:
+## CO2
+tfc_Canada = tfc[(tfc.Area == 'Canada')]
+tfc_US = tfc[(tfc.Area == 'United States of America')]
+tfc_Dominican = tfc[(tfc.Area == 'Dominican Republic')]
+plt.plot(tfc_Canada.Year, tfc_Canada.CO2, label = 'Kanada')
+plt.plot(tfc_US.Year, tfc_US.CO2, label = 'Stany Zjednoczone')
+plt.plot(tfc_Dominican.Year, tfc_Dominican.CO2, label = 'Dominikana')
+plt.yscale('log')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Emisja CO^2')
+plt.title('Emisja CO^2 (1961-2019)')
+plt.legend()
+plt.show()
 
 
 
