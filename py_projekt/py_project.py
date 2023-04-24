@@ -375,7 +375,7 @@ antarctica_t_ok = antarctica_t.iloc[:, -59:]
 
 jaro.iloc[:, -59:].isna().sum()
 
-# #### ANNA
+# #### NORTHERN & CENTRAL AMERICA
 
 # In[ ]:
 
@@ -513,6 +513,215 @@ plt.ylabel('Emisja CO^2')
 plt.title('Emisja CO^2 (1961-2019)')
 plt.legend()
 plt.show()
+
+
+###### AFRICA
+# In[ ]:
+
+
+# Making individual variable for group purpose working
+
+# DataFrame with 3 countries from Africa
+africa = df.copy()
+africa_t = optional_1(africa)
+africa_t_full= africa_t [(africa_t.Continent == 'Africa')]
+africa_t_c3 = africa_t_full[(africa_t_full.Area == 'Algeria')
+                | (africa_t_full.Area == 'United Republic of Tanzania')
+                | (africa_t_full.Area == 'Mozambique')]
+africa_t_c3 = africa_t_c3[(africa_t_c3.Months == 'Meteorological year')
+              & (africa_t_c3.Element == 'Temperature change')]
+africa_t_c3
+
+# Inp[]:
+#Preparing data
+africa_t_c3.columns = africa_t_c3.columns.str.replace('Y', '')
+africa_t_c3.replace(to_replace="United Republic of Tanzania",
+           value="Tanzania", inplace=True)
+del africa_t_c3['Area_Code']
+del africa_t_c3['Months_Code']
+del africa_t_c3['Months']
+del africa_t_c3['Element']
+del africa_t_c3['Unit']
+del africa_t_c3['Element_Code']
+del africa_t_c3['Continent']
+del africa_t_c3['Continent_Code']
+africa_t_c3
+
+# In[]:
+# Transformation table
+africa_t_c3_trans = pd.melt(africa_t_c3, id_vars='Area')
+africa_t_c3_trans = africa_t_c3_trans.rename(columns={'variable': 'Year',
+                              'value': 'Temp'})
+africa_t_c3_trans = africa_t_c3_trans.sort_values(by=['Area', 'Year'])
+africa_t_c3_trans.Year = pd.to_numeric(africa_t_c3_trans.Year)
+africa_t_c3_trans.info()
+
+# In[]:
+# DataFrame with Forests
+africa_forest = pd.read_csv('forest.csv')
+africa_forest = africa_forest[(africa_forest.country_name == 'Algeria')
+                | (africa_forest.country_name == 'Tanzania')
+            
+                | (africa_forest.country_name == 'Mozambique')]
+
+africa_forest = africa_forest.rename(columns={'year': 'Year',
+                                'country_name': 'Area',
+                                'value': 'Forest'})
+
+
+del africa_forest['country_code']
+africa_forest.Year = pd.to_numeric(africa_forest.Year)
+africa_forest.isnull().sum()
+africa_forest.info()
+
+# In[]:
+# DataFrame with CO2
+africa_co2 = pd.read_csv('co2.csv')
+africa_co2 = africa_co2[(africa_co2.country_name == 'Algeria')
+          | (africa_co2.country_name == 'Tanzania')
+          | (africa_co2.country_name == 'Mozambique')]
+
+africa_co2 = africa_co2.rename(columns={'year': 'Year',
+                          'country_name': 'Area',
+                          'value': 'CO2'})
+
+
+del africa_co2['country_code']
+
+africa_co2.isnull().sum()
+africa_co2.info()
+
+
+# In[]:
+# DataFrame with GDP
+africa_gdp = pd.read_csv('gdp_per_capita_growth.csv')
+
+africa_gdp = africa_gdp.rename(columns={'Country Name':'Area'})
+
+africa_gdp = africa_gdp[(africa_gdp.Area == 'Algeria')
+          | (africa_gdp.Area == 'Tanzania')
+          | (africa_gdp.Area == 'Mozambique')]
+
+del africa_gdp['Code']
+del africa_gdp['Unnamed: 65']
+
+africa_gdp
+
+# In[]:
+# Transform GDP
+
+africa_gdp_trans = pd.melt(africa_gdp, id_vars='Area')
+africa_gdp_trans = africa_gdp_trans.rename(columns={'variable': 'Year',
+                              'value': 'GDP_per_capita'})
+africa_gdp_trans = africa_gdp_trans.sort_values(by=['Area', 'Year'])
+africa_gdp_trans.Year = pd.to_numeric(africa_gdp_trans.Year)
+
+africa_gdp_trans.Area.unique()
+
+
+
+# In[]:
+# Join  temperature, forest & co2
+
+africa_tf = pd.merge(africa_t_c3_trans, africa_forest, on =['Area','Year'], how = 'left')
+africa_tfc = pd.merge(africa_tf, africa_co2, on=['Area', 'Year'], how = 'left')
+africa_tfcg = pd.merge(africa_tfc, africa_gdp_trans, on =['Area', 'Year'], how = 'left')
+africa_tfcg
+
+# In[]:
+## Temperature
+tfcg_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
+tfcg_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
+tfcg_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp, label = 'Algieria')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp, label = 'Tanzania')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp, label = 'Mozambik')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Temperatura \u2103')
+plt.title('Zmiany temperatur (1961-2019)')
+plt.legend()
+plt.show()
+
+
+
+# In[]:
+## ALGERIA: Temperature vs GDP
+tfcg_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp, label = 'Algieria_temp')
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita, label = 'Algieria_GDP')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Temperatura \u2103 \n GDP per capita')
+plt.title('AGLIERIA: Zmiany temperatur vs GDP per capita (1961-2019)')
+plt.legend()
+plt.show()
+
+# In[]:
+## Tanzania: Temperature vs GDP
+tfcg_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp, label = 'Tanzania_temp')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita, label = 'Tanzania_GDP')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Temperatura \u2103 \n GDP per capita')
+plt.title('TANZANIA: Zmiany temperatur vs GDP per capita (1961-2019)')
+plt.legend()
+plt.show()
+
+# In[]:
+## Mozambique: Temperature vs GDP
+tfcg_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp, label = 'Mozambik_temp')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.GDP_per_capita, label = 'Mozambik_GDP')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Temperatura \u2103 \n GDP per capita')
+plt.title('MOZAMBIK: Zmiany temperatur vs GDP per capita (1961-2019)')
+plt.legend()
+plt.show()
+
+# In[]:
+## Forest
+
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Forest, label = 'Algieria')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Forest, label = 'Tanzania')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Forest, label = 'Mozambik')
+plt.yscale('log')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Poziom zalesienia')
+plt.title('Zalesienie (1961-2019)')
+plt.legend()
+plt.show()
+
+# In[]:
+## CO2
+
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.CO2, label = 'Algieria')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.CO2, label = 'Tanzania')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.CO2, label = 'Mozambik')
+plt.yscale('log')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('Emisja CO^2')
+plt.title('Emisja CO^2 (1961-2019)')
+plt.legend()
+plt.show()
+
+# In[]:
+## GDP
+
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita, label = 'Algieria')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita, label = 'Tanzania')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.GDP_per_capita, label = 'Mozambik')
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('Rok')
+plt.ylabel('GDP per capita (zmiana)')
+plt.title('GDP per capita(1961-2019)')
+plt.legend()
+plt.show()
+
 
 
 
