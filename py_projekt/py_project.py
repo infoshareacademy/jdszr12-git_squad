@@ -707,20 +707,6 @@ plt.legend()
 plt.show()
 
 
-# In[]:
-## Temperature
-tfc_Canada = tfc[(tfc.Area == 'Canada')]
-tfc_US = tfc[(tfc.Area == 'United States of America')]
-tfc_Dominican = tfc[(tfc.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.Temp, label = 'Kanada')
-plt.plot(tfc_US.Year, tfc_US.Temp, label = 'Stany Zjednoczone')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.Temp, label = 'Dominikana')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Temperatura \u2103')
-plt.title('Zmiany temperatur (1961-2019)')
-plt.legend()
-plt.show()
 
 # In[]:
 ## ALGERIA: Temperature vs GDP
