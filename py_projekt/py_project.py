@@ -11,7 +11,7 @@
 
 # In[ ]:
 
-# In[1]:
+# In[25]:
 
 
 import numpy as np
@@ -26,7 +26,7 @@ import seaborn as sns
 
 # Default value
 
-# In[2]:
+# In[26]:
 
 
 pd.set_option("display.width", 80)
@@ -37,7 +37,7 @@ pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
 # Default DataFrame
 
-# In[3]:
+# In[27]:
 
 
 df = pd.read_csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv",
@@ -48,7 +48,7 @@ df = pd.read_csv("Environment_Temperature_change_E_All_Data_NOFLAG.csv",
 
 # In[ ]:
 
-# In[4]:
+# In[7]:
 
 
 df.shape
@@ -58,7 +58,7 @@ df.shape
 
 # Columns name rename, where \s (inside names) into _
 
-# In[5]:
+# In[28]:
 
 
 df = df.rename(columns={"Area Code": "Area_Code",
@@ -70,7 +70,7 @@ df = df.rename(columns={"Area Code": "Area_Code",
 
 # Replacing comas in string
 
-# In[6]:
+# In[29]:
 
 
 df['Area'] = df['Area'].str.replace(',', '')
@@ -78,7 +78,7 @@ df['Area'] = df['Area'].str.replace(',', '')
 
 # Replacing quote in string
 
-# In[7]:
+# In[10]:
 
 
 df['Area'] = df['Area'].str.replace('\"', '')
@@ -93,7 +93,7 @@ df['Area'] = df['Area'].str.replace('\"', '')
 # (every rows containing country name will stay in df)<br>
 # (every rows containing geo-region name will not stay in df)
 
-# In[8]:
+# In[30]:
 
 
 def optional_1(df):
@@ -113,7 +113,7 @@ def optional_1(df):
 # new df is returned but it must be override, like: "df_new = optional_2(df)"<br>
 # (of course this can be the same variable: "df = optional_2(df)" )
 
-# In[9]:
+# In[31]:
 
 
 def optional_2(df):
@@ -131,7 +131,7 @@ def optional_2(df):
 
 # In[ ]:
 
-# In[10]:
+# In[13]:
 
 
 jaro1 = df.copy()
@@ -139,7 +139,7 @@ jaro1 = df.copy()
 
 # In[ ]:
 
-# In[11]:
+# In[14]:
 
 
 jaro1.columns = jaro1.columns.str.replace('Y', '')
@@ -149,7 +149,7 @@ jaro1.columns = jaro1.columns.str.replace('Y', '')
 
 # In[ ]:
 
-# In[12]:
+# In[15]:
 
 
 world_t = jaro1.loc[(jaro1['Area_Code'] == 5000) & (
@@ -164,7 +164,7 @@ world_t_ok = world_t.iloc[:, -59:]
 
 # In[ ]:
 
-# In[13]:
+# In[16]:
 
 
 africa_t = jaro1.loc[(jaro1['Area_Code'] == 5100) & (
@@ -177,7 +177,7 @@ africa_t_ok = africa_t.iloc[:, -59:]
 
 # In[ ]:
 
-# In[14]:
+# In[17]:
 
 
 north_america_t = jaro1.loc[((jaro1['Area_Code'] == 5203) | (jaro1['Area_Code'] == 5204) | (jaro1['Area_Code'] == 5206))
@@ -1335,7 +1335,7 @@ plt.show();
 
 # ##### Temperature change in 3 countries of South America
 
-# In[466]:
+# In[18]:
 
 
 SouthAmerica = df.copy()
@@ -1361,7 +1361,7 @@ SouthAmerica_temp
 
 # ##### Modified table - Temperature change
 
-# In[467]:
+# In[19]:
 
 
 SouthAmerica_temp_mdf = pd.melt(SouthAmerica_temp, id_vars='Area')
@@ -1370,7 +1370,7 @@ SouthAmerica_temp_mdf= SouthAmerica_temp_mdf.sort_values(by=['Area', 'Year'])
 SouthAmerica_temp_mdf
 
 
-# In[468]:
+# In[20]:
 
 
 SouthAmerica_temp_mdf.Year = pd.to_numeric(SouthAmerica_temp_mdf.Year)
@@ -1380,7 +1380,7 @@ SouthAmerica_temp_mdf.Year = pd.to_numeric(SouthAmerica_temp_mdf.Year)
 
 # Temperature chart
 
-# In[331]:
+# In[21]:
 
 
 Argentina_temp = SouthAmerica_temp_mdf [(SouthAmerica_temp_mdf.Area == 'Argentina')]
@@ -1402,19 +1402,19 @@ plt.show()
 
 # ##### Value of CO2 in 3 countries of South America
 
-# In[469]:
+# In[22]:
 
 
 SouthAmerica_CO2 = pd.read_csv('co2.csv')
 
 
-# In[470]:
+# In[23]:
 
 
 del SouthAmerica_CO2['country_code']
 
 
-# In[471]:
+# In[24]:
 
 
 SouthAmerica_CO2 = SouthAmerica_CO2[(SouthAmerica_CO2.country_name == 'Argentina') | (SouthAmerica_CO2.country_name == 'Brazil')
@@ -1574,19 +1574,19 @@ plt.show()
 
 # ##### Percent value of forestation in 3 countries of South America
 
-# In[480]:
+# In[33]:
 
 
 SouthAmerica_forestation = pd.read_csv('forest.csv')
 
 
-# In[481]:
+# In[34]:
 
 
 del SouthAmerica_forestation['country_code']
 
 
-# In[482]:
+# In[35]:
 
 
 SouthAmerica_forestation = SouthAmerica_forestation[(SouthAmerica_forestation.country_name == 'Argentina') | (SouthAmerica_forestation.country_name == 'Brazil')
@@ -1594,14 +1594,14 @@ SouthAmerica_forestation = SouthAmerica_forestation[(SouthAmerica_forestation.co
 SouthAmerica_forestation
 
 
-# In[483]:
+# In[36]:
 
 
 SouthAmerica_forestation = SouthAmerica_forestation.rename(columns={'country_name':'Area', 'year':'Year', 'value': 'Forestation_percent'})
 SouthAmerica_forestation
 
 
-# In[484]:
+# In[37]:
 
 
 SouthAmerica_forestation.Year = pd.to_numeric(SouthAmerica_forestation.Year)
@@ -1611,7 +1611,7 @@ SouthAmerica_forestation.Year = pd.to_numeric(SouthAmerica_forestation.Year)
 
 # Forestation
 
-# In[445]:
+# In[38]:
 
 
 Argentina_forestation = SouthAmerica_forestation[(SouthAmerica_forestation.Area == 'Argentina')]
@@ -1624,7 +1624,7 @@ plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('Zalesienie_procent')
-plt.title('Zalesienie w latach 1961-2019')
+plt.title('Zalesienie w latach 1990-2019')
 plt.legend()
 plt.show()
 
