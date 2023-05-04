@@ -18,6 +18,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
+import matplotlib.colors as mcolors
 
 
 # ### DataFrame
@@ -703,12 +704,13 @@ NAmerica_tfcg
 # In[61]:
 
 
+
 tfc_Canada = NAmerica_tfcg [(NAmerica_tfcg.Area == 'Canada')]
 tfc_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
 tfc_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.Temp, label = 'Kanada')
-plt.plot(tfc_US.Year, tfc_US.Temp, label = 'Stany Zjednoczone')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.Temp, label = 'Dominikana')
+plt.plot(tfc_Canada.Year, tfc_Canada.Temp, label = 'Kanada', color = '#00035b')
+plt.plot(tfc_US.Year, tfc_US.Temp, label = 'Stany Zjednoczone', color = '#0343df')
+plt.plot(tfc_Dominican.Year, tfc_Dominican.Temp, label = 'Dominikana', color = '#a2cffe')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('Temperatura \u2103')
@@ -726,14 +728,14 @@ plt.show()
 tfc_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
 tfc_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
 tfc_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.Forest, label = 'Kanada')
-plt.plot(tfc_US.Year, tfc_US.Forest, label = 'Stany Zjednoczone')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.Forest, label = 'Dominikana')
+plt.plot(tfc_Canada.Year, tfc_Canada.Forest, label = 'Kanada', color = '#00035b')
+plt.plot(tfc_US.Year, tfc_US.Forest, label = 'Stany Zjednoczone', color = '#0343df')
+plt.plot(tfc_Dominican.Year, tfc_Dominican.Forest, label = 'Dominikana', color = '#a2cffe')
 plt.yscale('log')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('Poziom zalesienia')
-plt.title('Zalesienie (1961-2019)')
+plt.title('Zalesienie (1990-2019)')
 plt.legend()
 plt.show()
 
@@ -747,9 +749,9 @@ plt.show()
 tfc_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
 tfc_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
 tfc_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.CO2, label = 'Kanada')
-plt.plot(tfc_US.Year, tfc_US.CO2, label = 'Stany Zjednoczone')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.CO2, label = 'Dominikana')
+plt.plot(tfc_Canada.Year, tfc_Canada.CO2, label = 'Kanada', color = '#00035b')
+plt.plot(tfc_US.Year, tfc_US.CO2, label = 'Stany Zjednoczone', color = '#0343df')
+plt.plot(tfc_Dominican.Year, tfc_Dominican.CO2, label = 'Dominikana', color = '#a2cffe')
 plt.yscale('log')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
@@ -757,6 +759,75 @@ plt.ylabel('Emisja CO^2')
 plt.title('Emisja CO^2 (1961-2019)')
 plt.legend()
 plt.show()
+
+# In[]:
+#Kanada: temp vs CO2
+
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Rok')
+ax1.set_ylabel('Temperatura', color='#00035b')
+ax1.plot(tfc_Canada.Year, tfc_Canada.Temp, label = 'Kanada', color = '#00035b')
+ax1.tick_params(axis='y', labelcolor='#00035b')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+
+ax2.set_ylabel('CO^2', color='black')  # we already handled the x-label with ax1
+ax2.plot(tfc_Canada.Year, tfc_Canada.CO2, label = 'Kanada', color = 'black')
+ax2.tick_params(axis='y', labelcolor='black')
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.title('Kanada: zmiany temperatury vs emisja CO^2 (1961-2019)')
+
+plt.show()
+
+# In[]:
+#USA: temp vs CO2
+
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Rok')
+ax1.set_ylabel('Temperatura', color='#0343df')
+ax1.plot(tfc_US.Year, tfc_US.Temp, label = 'USA', color = '#0343df')
+ax1.tick_params(axis='y', labelcolor='#0343df')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+
+ax2.set_ylabel('CO^2', color='black')  # we already handled the x-label with ax1
+ax2.plot(tfc_US.Year, tfc_US.CO2, label = 'USA', color = 'black')
+ax2.tick_params(axis='y', labelcolor='black')
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.title('USA: zmiany temperatury vs emisja CO^2 (1961-2019)')
+
+plt.show()
+
+
+# In[]:
+#Dominikana: temp vs CO2
+
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Rok')
+ax1.set_ylabel('Temperatura', color='#a2cffe')
+ax1.plot(tfc_Dominican.Year, tfc_Dominican.Temp, label = 'Dominikana', color = '#a2cffe')
+ax1.tick_params(axis='y', labelcolor='#a2cffe')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+
+ax2.set_ylabel('CO^2', color='black')  # we already handled the x-label with ax1
+ax2.plot(tfc_Dominican.Year, tfc_Dominican.CO2, label = 'Dominikana', color = 'black')
+ax2.tick_params(axis='y', labelcolor='black')
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.title('Dominikana: zmiany temperatury vs emisja CO^2 (1961-2019)')
+
+plt.show()
+
+
 
 
 # n[]:<br>
@@ -1010,9 +1081,9 @@ africa_tfcg
 tfcg_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
 tfcg_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
 tfcg_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp, label = 'Algieria')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp, label = 'Tanzania')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp, label = 'Mozambik')
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp, label = 'Algieria', color = '#000000')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp, label = 'Tanzania', color='#929591')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp, label = 'Mozambik', color = '#d8dcd6')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('Temperatura \u2103')
@@ -1078,14 +1149,14 @@ plt.show()
 # In[92]:
 
 
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Forest, label = 'Algieria')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Forest, label = 'Tanzania')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Forest, label = 'Mozambik')
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Forest, label = 'Algieria', color = '#000000')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Forest, label = 'Tanzania', color='#929591')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Forest, label = 'Mozambik', color = '#d8dcd6')
 plt.yscale('log')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('Poziom zalesienia')
-plt.title('Zalesienie (1961-2019)')
+plt.title('Zalesienie (1990-2019)')
 plt.legend()
 plt.show()
 
@@ -1096,9 +1167,9 @@ plt.show()
 # In[93]:
 
 
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.CO2, label = 'Algieria')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.CO2, label = 'Tanzania')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.CO2, label = 'Mozambik')
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.CO2, label = 'Algieria', color = '#000000')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.CO2, label = 'Tanzania', color='#929591')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.CO2, label = 'Mozambik', color = '#d8dcd6')
 plt.yscale('log')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
@@ -1114,15 +1185,84 @@ plt.show()
 # In[94]:
 
 
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita, label = 'Algieria')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita, label = 'Tanzania')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.GDP_per_capita, label = 'Mozambik')
+plt.plot(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita, label = 'Algieria', color = '#000000')
+plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita, label = 'Tanzania', color='#929591')
+plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.GDP_per_capita, label = 'Mozambik', color = '#d8dcd6')
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('GDP per capita (zmiana)')
 plt.title('GDP per capita(1961-2019)')
 plt.legend()
 plt.show()
+
+#In[]:
+#Algeria: temp vs CO2
+
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Rok')
+ax1.set_ylabel('Temperatura', color='#000000')
+ax1.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp, label = 'Algeria', color = '#000000')
+ax1.tick_params(axis='y', labelcolor='#000000')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+
+ax2.set_ylabel('CO^2', color='red')  # we already handled the x-label with ax1
+ax2.plot(tfcg_Algeria.Year, tfcg_Algeria.CO2, label = 'Algeria', color = 'red')
+ax2.tick_params(axis='y', labelcolor='red')
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.title('Algeria: zmiany temperatury vs emisja CO^2 (1961-2019)')
+
+plt.show()
+
+
+#In[]:
+#Tanzania: temp vs CO2
+
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Rok')
+ax1.set_ylabel('Temperatura', color='#929591')
+ax1.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp, label = 'Tanzania', color ='#929591')
+ax1.tick_params(axis='y', labelcolor='#929591')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+
+ax2.set_ylabel('CO^2', color='red')  # we already handled the x-label with ax1
+ax2.plot(tfcg_Tanzania.Year, tfcg_Tanzania.CO2, label = 'Tanzania', color = 'red')
+ax2.tick_params(axis='y', labelcolor='red')
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.title('Tanzania: zmiany temperatury vs emisja CO^2 (1961-2019)')
+
+plt.show()
+
+#In[]:
+#Mozambik: temp vs CO2
+
+fig, ax1 = plt.subplots()
+
+ax1.set_xlabel('Rok')
+ax1.set_ylabel('Temperatura', color='#d8dcd6')
+ax1.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp, label = 'Mozambik', color ='#d8dcd6')
+ax1.tick_params(axis='y', labelcolor='#d8dcd6')
+
+ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+
+
+ax2.set_ylabel('CO^2', color='red')  # we already handled the x-label with ax1
+ax2.plot(tfcg_Mozambique.Year, tfcg_Mozambique.CO2, label = 'Mozambik', color = 'red')
+ax2.tick_params(axis='y', labelcolor='red')
+
+fig.tight_layout()  # otherwise the right y-label is slightly clipped
+plt.title('Mozambik: zmiany temperatury vs emisja CO^2 (1961-2019)')
+
+plt.show()
+
+
 
 
 # n[]:<br>
