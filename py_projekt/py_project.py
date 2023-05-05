@@ -19,6 +19,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import matplotlib.colors as mcolors
+from scipy.interpolate import splrep, splev
 
 
 # ### DataFrame
@@ -1405,13 +1406,12 @@ asia['Area'] = asia['Area'].str.replace("'" ,' ')
 
 # In[ ]:
 
-# Dataframe 5 Asia countries
+# Dataframe 3 Asia countries
 
 # In[108]:
 
 
-asia_5=asia[(asia.Area=='Afghanistan') | (asia.Area=='Saudi Arabia') | (asia.Area=='India') |
-             (asia.Area=='Republic of Korea') | (asia.Area=='China')]
+asia_3=asia[(asia.Area=='India') | (asia.Area=='Republic of Korea') | (asia.Area=='China')]
 
 
 # In[ ]:
@@ -1419,43 +1419,71 @@ asia_5=asia[(asia.Area=='Afghanistan') | (asia.Area=='Saudi Arabia') | (asia.Are
 # In[109]:
 
 
-asia_5.isnull().sum()
+asia_3.isnull().sum()
 
 
 # In[ ]:
 
-# X axis from columns 
+# Transform teble 
 
 # In[110]:
 
 
-x=asia_5.columns[1:].T
+asia_3_tmp = pd.melt(asia_3, id_vars='Area')
 
 
 # In[ ]:
 
-# Y axis for countries
+# Renameing columns
 
 # In[111]:
 
 
-y1=asia_5.iloc[0,-59:].values.T # Afganistan
-y2=asia_5.iloc[1,-59:].values.T #China
-y3=asia_5.iloc[2,-59:].values.T #India                  
-y4=asia_5.iloc[3,-59:].values.T #South Korea
-y5=asia_5.iloc[4,-59:].values.T #Arabia
+asia_3_tmp=asia_3_tmp.rename(columns= {'variable' : 'Year',
+                                       'value' : 'Temp' })
 
 
 # In[ ]:
 
-# In[112]:
+asia_3_tmp = asia_3_tmp.sort_values(by= ['Area','Year'])
+
+# Making x variables
+ In[112]:
+
+x_mat=asia_3_tmp.Year.unique()
+
+# Converting object in to int64
+In[]:
+
+x_mat=x_mat.astype(np.int64)
+
+# Making y variables for 3 Asia countries
+
+In[]:
+
+y1_tmp=asia_3_tmp[asia_3_tmp.Area=='China'].iloc[:,2].values.T
+y2_tmp=asia_3_tmp[asia_3_tmp.Area=='India'].iloc[:,2].values.T
+y3_tmp=asia_3_tmp[asia_3_tmp.Area=='Republic of Korea'].iloc[:,2].values.T
+
+# Preparing plots for smoothing
+
+In[]:
+
+bspl1 = splrep(x_mat,y1_tmp,s=4)   
+bspl_y1 = splev(x_mat,bspl1) 
+
+bspl2 = splrep(x_mat,y2_tmp,s=4)   
+bspl_y2 = splev(x_mat,bspl2) 
+
+bspl3 = splrep(x_mat,y3_tmp,s=12)   
+bspl_y3 = splev(x_mat,bspl3)
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x_mat, bspl_y1, label='Chiny')
+plt.plot(x_mat, bspl_y2, label='Indie')
+plt.plot(x_mat, bspl_y3, label='South Korea')
 
 
-plt.plot(x, y1, label='Afganistan')
-plt.plot(x, y2, label='Chiny')
-plt.plot(x, y3, label='Indie')
-plt.plot(x, y4, label='South Korea')   
-plt.plot(x, y5, label='Arabia')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('year')
