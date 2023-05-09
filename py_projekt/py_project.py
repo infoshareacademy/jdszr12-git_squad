@@ -1,6 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
 # # Climate catastrophe<br>
 # <br>
 # ## Data analysis on changes in average temperatures<br>
@@ -14,6 +11,8 @@
 # In[25]:
 
 
+import plotly.offline as pyo
+import plotly.express as px
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -567,6 +566,665 @@ antarctica_t_ok = antarctica_t.iloc[:, -59:]
 
 
 jaro.iloc[:, -59:].isna().sum()
+
+# =====================================================================================
+
+# In[3]:
+
+
+el_la = pd.read_csv("El-Nino.csv", sep=';', encoding="Windows-1250")
+# el_la
+
+
+# In[4]:
+
+
+el_la_to_drop = [1950, 1951, 1952, 1953,
+                 1954, 1955, 1956, 1957, 1958, 1959, 1960]
+
+for i in range(len(el_la_to_drop)):
+    el_la.drop(el_la[el_la['year'] == el_la_to_drop[i]].index, inplace=True)
+
+
+# In[5]:
+
+
+el_la.reset_index(drop=True, inplace=True)
+# el_la
+
+
+# In[6]:
+
+
+# El Niño
+# 0.5 START
+# 0.5 Weak
+# 1.0 Moderate
+# 1.5 Strong
+# 2.0 Very Strong
+# La Niña
+# -0.5 START
+# -0.5 Weak
+# -1.0 Moderate
+# -1.5 Strong
+# -2.0 Very Strong
+
+
+# In[7]:
+
+
+el_la['mean'] = ''
+
+
+# In[8]:
+
+
+for i in range(el_la.shape[0]):
+    el_la.iloc[i, -1] = round(np.mean(el_la.loc[i][-13:-1]), 1)
+
+
+# In[9]:
+
+
+el_la.drop(['January', 'February', 'March', 'April', 'May', 'June', 'July',
+           'August', 'September', 'October', 'November', 'December'], axis=1, inplace=True)
+
+
+# In[10]:
+
+
+# el_la #.reset_index()
+
+
+# In[11]:
+
+
+el_la['area'] = 'El Nino - La Nina'
+
+
+# In[12]:
+
+
+el_la_p = el_la.pivot(index='area', columns='year', values='mean')
+
+el_la_p = el_la_p.reset_index()
+
+
+# In[13]:
+
+
+el_la_p
+
+# =====================================================================================
+
+# In[]:
+
+
+temp = df.copy()
+
+
+# In[]:
+
+
+temp['Months'].unique()
+
+
+# In[]:
+
+
+temp['Months'] = temp['Months'].replace("Dec–Jan–Feb", "Winter")
+temp['Months'] = temp['Months'].replace("Mar–Apr–May", "Spring")
+temp['Months'] = temp['Months'].replace("Jun–Jul–Aug", "Summer")
+temp['Months'] = temp['Months'].replace("Sep–Oct–Nov", "Autumn")
+temp.columns = temp.columns.str.replace('Y', '')
+temp.drop('Unit', axis=1, inplace=True)
+temp = temp.rename(columns={"Area Code": "area_code",
+                            "Area": "area",
+                            "Months Code": "months_code",
+                            "Months": "months",
+                            "Element Code": "element_code",
+                            "Element": "element"})
+
+
+# In[]:
+
+
+# Select the row that contains USSR in the area column
+ussr_row = temp.loc[temp['area'] == 'USSR']
+# ussr_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# for loop array
+ussr_area = ['Armenia', 'Azerbaijan', 'Belarus', 'Estonia',
+             'Georgia', 'Kazakhstan', 'Kyrgyzstan', 'Latvia',
+             'Lithuania', 'Republic of Moldova', 'Russian Federation',
+             'Tajikistan', 'Turkmenistan', 'Ukraine', 'Uzbekistan']
+
+# Check NAN, from-to which year to update from ussr_row variable
+# for i in range(len(ussr_area)):
+#     print(temp.loc[temp['area'] == ussr_area[i]].loc[:,'1961':'2019'].isna())
+
+
+# Non loop verision
+# armenia_row = temp.loc[temp['area'] == 'Armenia']
+# armenia_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# Copy the non-NAN values from USSR row to appropriate NAN value
+# in years columns in appropriate country-area row (from ussr_area array)
+for i in range(len(ussr_area)):
+    temp.loc[temp['area'] == ussr_area[i],
+             '1961':'1991'] = ussr_row.loc[:, '1961':'1991'].values
+
+# Non loop verision
+# temp.loc[temp['area'] == 'Armenia', '1961':'1991'] = ussr_row.loc[:,'1961':'1991'].values
+
+
+# In[]:
+
+
+# Select the row that contains Belgium-Luxembourg in the area column
+belgium_lux_row = temp.loc[temp['area'] == 'Belgium-Luxembourg']
+# belgium_lux_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# for loop array
+bel_lux_area = ['Belgium', 'Luxembourg']
+
+# Check NAN, from-to which year to update from bel_lux_area variable
+# for i in range(len(bel_lux_area)):
+#     print(temp.loc[temp['area'] == bel_lux_area[i]].loc[:,'1961':'2019'].isna())
+
+
+# In[]:
+
+
+# Copy the non-NAN values from Belgium-Luxembourg row to appropriate NAN value
+# in years columns in appropriate country-area row (from bel_lux_area array)
+for i in range(len(bel_lux_area)):
+    temp.loc[temp['area'] == bel_lux_area[i],
+             '1961':'1999'] = belgium_lux_row.loc[:, '1961':'1999'].values
+
+
+# In[]:
+
+
+# Select the row that contains Czechoslovakia in the area column
+czechoslovakia_row = temp.loc[temp['area'] == 'Czechoslovakia']
+# czechoslovakia_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# for loop array
+czechoslovakia_area = ['Czechia', 'Slovakia']
+
+# Check NAN, from-to which year to update from czechoslovakia_area variable
+# for i in range(len(czechoslovakia_area)):
+#     print(temp.loc[temp['area'] == czechoslovakia_area[i]].loc[:,'1961':'2019'].isna())
+
+
+# In[]:
+
+
+# Copy the non-NAN values from Czechoslovakia row to appropriate NAN value
+# in years columns in appropriate country-area row (from czechoslovakia_area array)
+for i in range(len(czechoslovakia_area)):
+    temp.loc[temp['area'] == czechoslovakia_area[i],
+             '1961':'1992'] = czechoslovakia_row.loc[:, '1961':'1992'].values
+
+
+# In[]:
+
+
+# Select the row that contains Yugoslav SFR in the area column
+yugoslav_row = temp.loc[temp['area'] == 'Yugoslav SFR']
+# yugoslav_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# for loop array
+yugoslav_area = ['Croatia', 'Slovenia', 'Bosnia and Herzegovina',
+                 'North Macedonia', 'Serbia and Montenegro']
+
+# Check NAN, from-to which year to update from yugoslav_area variable
+# for i in range(len(yugoslav_area)):
+#     print(temp.loc[temp['area'] == yugoslav_area[i]].loc[:,'1961':'2019'].isna())
+
+
+# In[]:
+
+
+# Copy the non-NAN values from Yugoslav SFR row to appropriate NAN value
+# in years columns in appropriate country-area row (from yugoslav_area array)
+for i in range(len(yugoslav_area)):
+    temp.loc[temp['area'] == yugoslav_area[i],
+             '1961':'1991'] = yugoslav_row.loc[:, '1961':'1991'].values
+
+
+# In[]:
+
+
+# Select the row that contains Serbia and Montenegro in the area column
+s_m_row = temp.loc[temp['area'] == 'Serbia and Montenegro']
+# s_m_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# for loop array
+s_m_area = ['Montenegro', 'Serbia']
+
+# Check NAN, from-to which year to update from s_m_area variable
+# for i in range(len(s_m_area)):
+#     print(temp.loc[temp['area'] == s_m_area[i]].loc[:,'1961':'2019'].isna())
+
+
+# In[]:
+
+
+# Copy the non-NAN values from Serbia and Montenegro row to appropriate NAN value
+# in years columns in appropriate country-area row (from s_m_area array)
+for i in range(len(s_m_area)):
+    temp.loc[temp['area'] == s_m_area[i],
+             '1961':'2005'] = s_m_row.loc[:, '1961':'2005'].values
+
+
+# In[]:
+
+
+# Select the row that contains Sudan (former) in the area column
+sudan_f_row = temp.loc[temp['area'] == 'Sudan (former)']
+# sudan_f_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# for loop array
+sudan_f_area = ['Sudan', 'South Sudan']
+
+# Check NAN, from-to which year to update from sudan_f_area variable
+# for i in range(len(sudan_f_area)):
+#     print(temp.loc[temp['area'] == sudan_f_area[i]].loc[:,'1961':'2019'].isna())
+
+
+# In[]:
+
+
+# Copy the non-NAN values from Sudan (former) row to appropriate NAN value
+# in years columns in appropriate country-area row (from sudan_f_area array)
+for i in range(len(sudan_f_area)):
+    temp.loc[temp['area'] == sudan_f_area[i],
+             '1961':'2010'] = sudan_f_row.loc[:, '1961':'2010'].values
+
+
+# In[]:
+
+
+# Select the row that contains Ethiopia PDR in the area column
+ethiopia_pdr_row = temp.loc[temp['area'] == 'Ethiopia PDR']
+# ethiopia_pdr_row.loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# Check NAN, from-to which year to update
+#temp.loc[temp['area'] == 'Ethiopia'].loc[:,'1961':'2019'].isna()
+
+
+# In[]:
+
+
+# Copy the non-NAN values from Ethiopia PDR row to appropriate NAN value in years columns in Ethiopia row
+temp.loc[temp['area'] == 'Ethiopia',
+         '1961':'1992'] = ethiopia_pdr_row.loc[:, '1961':'1992'].values
+
+
+# In[]:
+
+
+temp_c_to_drop = ['USSR', 'Belgium-Luxembourg', 'Czechoslovakia',
+                  'Yugoslav SFR', 'Serbia and Montenegro', 'Sudan (former)', 'Ethiopia PDR']
+
+for i in range(len(temp_c_to_drop)):
+    temp.drop(temp[temp['area'] == temp_c_to_drop[i]].index, inplace=True)
+
+
+# In[]:
+
+
+for i in range(temp.shape[0]):
+    temp.iloc[i, -59:] = temp.iloc[i, -59:].bfill(axis='rows')
+    temp.iloc[i, -59:] = temp.iloc[i, -59:].ffill(axis='rows')
+
+
+# In[]:
+
+
+# del in temp, co2, forest, gdp, urban pop
+t_drop_rows = ['Anguilla', 'Belgium-Luxembourg', 'China mainland', 'China Taiwan Province of',
+               'Christmas Island', 'Cocos (Keeling) Islands', 'Cook Islands', 'Czechoslovakia',
+               'Ethiopia PDR', 'Falkland Islands (Malvinas)', 'French Guiana',
+               'French Southern and Antarctic Territories', 'Guadeloupe', 'Holy See', 'Martinique',
+               'Mayotte', 'Midway Island', 'Montserrat', 'Netherlands Antilles (former)', 'Niue',
+               'Norfolk Island', 'Pitcairn Islands', 'Réunion', 'Saint Helena Ascension and Tristan da Cunha',
+               'Saint Pierre and Miquelon', 'Serbia and Montenegro', 'South Georgia and the South Sandwich Islands',
+               'Sudan (former)', 'Svalbard and Jan Mayen Islands', 'Tokelau', 'USSR', 'Wake Island',
+               'Wallis and Futuna Islands', 'Yugoslav SFR']
+
+for i in range(len(t_drop_rows)):
+    temp.drop(temp[temp['area'] == t_drop_rows[i]].index, inplace=True)
+
+
+# In[]:
+
+
+t_rename = {'Bolivia (Plurinational State of)': 'Bolivia',
+            'Bosnia and Herzegovina': 'Bosnia and Herz.',
+            'Brunei Darussalam': 'Brunei',
+            'Caribbean': 'Caribbean small states',
+            'Central African Republic': 'Central African Rep.',
+            'Congo': 'Congo',
+            'Côte d\'Ivoire': 'Côte d\'Ivoire',
+            'Democratic Republic of the Congo': 'Dem. Rep. Congo',
+            'Dominican Republic': 'Dominican Rep.',
+            'Equatorial Guinea': 'Eq. Guinea',
+            'Eswatini': 'eSwatini',
+            'Falkland Islands (Malvinas)': 'Falkland Is.',
+            'French Southern and Antarctic Territories': 'Fr. S. Antarctic Lands',
+            'Iran (Islamic Republic of)': 'Iran',
+            'Lao People\'s Democratic Republic': 'Laos',
+            'Micronesia (Federated States of)': 'Micronesia Fed. Sts.',
+            'Republic of Moldova': 'Moldova',
+            'Democratic People\'s Republic of Korea': 'North Korea',
+            'Pacific Islands Trust Territory': 'Pacific island small states',
+            'Réunion': 'Reunion',
+            'Russian Federation': 'Russia',
+            'South Sudan': 'S. Sudan',
+            'Slovakia': 'Slovakia',
+            'Solomon Islands': 'Solomon Is.',
+            'Republic of Korea': 'South Korea',
+            'Saint Kitts and Nevis': 'St. Kitts and Nevis',
+            'Saint Lucia': 'St. Lucia',
+            'Saint Vincent and the Grenadines': 'St. Vincent and the Grenadines',
+            'Syrian Arab Republic': 'Syria',
+            'China Taiwan Province of': 'Taiwan',
+            'United Republic of Tanzania': 'Tanzania',
+            'Venezuela (Bolivarian Republic of)': 'Venezuela',
+            'Viet Nam': 'Vietnam',
+            'United States Virgin Islands': 'Virgin Islands (U.S.)'}
+
+temp['area'] = temp['area'].replace(t_rename)
+
+# =====================================================================================
+
+# In[]:
+
+
+# El Nino / La Nina (1961-2019)
+el_la_plot = el_la_p.iloc[:, -59:]
+
+# Whole World temperatures (1961-2019)
+world_t = temp.loc[(temp['area_code'] == 5000) & (
+    temp['element_code'] == 7271) & (temp['months_code'] == 7020)]
+
+# world_t.iloc[:,-59:].isna().sum()
+world_t_ok = world_t.iloc[:, -59:]
+
+
+# In[]:
+
+
+x = world_t_ok.columns
+y1 = world_t_ok.values.T
+
+# get first row
+el_la_row = el_la_plot.iloc[0]
+
+# convert row to numpy array
+el_la_array = el_la_row.to_numpy()
+y2 = el_la_array.T
+
+plt.plot(x, y1, label='World')
+
+plt.plot(x, y2, label='El Nino / La Nina')
+plt.axhline(y=0.0, color='r', linestyle='-')
+
+ymax = np.max(y2)
+ymin = np.min(y2)
+
+for i in range(len(y2)):
+    if y2[i] == ymax:
+        plt.axvspan(x[i], x[i+1], alpha=0.2, color='red')
+    elif y2[i] == ymin:
+        plt.axvspan(x[i], x[i+1], alpha=0.2, color='blue')
+
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('temp \u2103')
+plt.title('Temperatures (1961-2019)')
+plt.legend()
+plt.show()
+
+# =====================================================================================
+
+
+# In[84]:
+
+
+pyo.init_notebook_mode()
+
+country_iso3 = pd.read_csv(
+    'https://raw.githubusercontent.com/infoshareacademy/jdszr12-git_squad/main/py_projekt/FAOSTAT_data_11-24-2020.csv', encoding="UTF-8")
+
+
+# In[85]:
+
+
+country_iso3.columns
+
+
+# In[86]:
+
+
+country_iso3.drop(columns=['Country Code', 'M49 Code',
+                  'ISO2 Code', 'Start Year', 'End Year'], inplace=True)
+country_iso3.rename(
+    columns={'Country': 'country_name', 'ISO3 Code': 'country_code'}, inplace=True)
+
+
+# In[87]:
+
+
+iso3_drop_rows = ['Anguilla', 'Belgium-Luxembourg', 'Bermuda', 'China mainland', 'China Taiwan Province of',
+                  'Christmas Island', 'Cocos (Keeling) Islands', 'Cook Islands', 'Czechoslovakia',  'Ethiopia PDR',
+                  'Falkland Islands (Malvinas)', 'French Guiana', 'French Southern Territories', 'Guadeloupe',
+                  'Guam', 'Holy See', 'Martinique', 'Mayotte', 'Midway Island', 'Montserrat',
+                  'Netherlands Antilles (former)', 'Niue', 'Norfolk Island', 'Pitcairn', 'Réunion',
+                  'Saint Helena, Ascension and Tristan da Cunha', 'Saint Pierre and Miquelon', 'Serbia and Montenegro',
+                  'Sudan (former)', 'Svalbard and Jan Mayen Islands', 'Tokelau', 'USSR', 'Wake Island',
+                  'Wallis and Futuna Islands', 'Yugoslav SFR', 'Africa', 'Åland Islands', 'Americas',
+                  'Annex I countries', 'Antarctic Region', 'Asia', 'Australia and New Zealand',
+                  'Bonaire, Sint Eustatius and Saba', 'Bouvet Island', 'British Indian Ocean Territory', 'Caribbean',
+                  'Central America', 'Central Asia', 'Central Asia and Southern Asia', 'China, mainland',
+                  'East Asia (excluding China)', 'Eastern Africa', 'Eastern Asia', 'Eastern Asia and South-eastern Asia',
+                  'Eastern Europe', 'Europe', 'European Union (27)', 'European Union (28)', 'Germany Fr', 'Germany Nl',
+                  'Heard and McDonald Islands', 'High-income economies', 'Jersey', 'Johnston Island',
+                  'Land Locked Developing Countries', 'Latin America and the Caribbean', 'Least Developed Countries',
+                  'Low income economies', 'Low Income Food Deficit Countries', 'Lower-middle-income economies',
+                  'Melanesia', 'Micronesia', 'Middle Africa', 'Net Food Importing Developing Countries',
+                  'Non-Annex I countries', 'North Africa (excluding Sudan)', 'Northern Africa', 'Northern America',
+                  'Northern America and Europe', 'Northern Europe', 'Northern Mariana Islands', 'Oceania',
+                  'Oceania excluding Australia and New Zealand', 'OECD', 'Pacific Islands Trust Territory', 'Polynesia',
+                  'Saint Barthélemy', 'Saint-Martin (French part)', 'Serbia (excluding Kosovo)',
+                  'Small Island Developing States', 'South America', 'South Asia (excluding India)',
+                  'South Georgia and the South Sandwich Islands', 'South-eastern Asia', 'Southern Africa', 'Southern Asia',
+                  'Southern Europe', 'Sub-Saharan Africa', 'Sub-Saharan Africa (including Sudan)',
+                  'United States Minor Outlying Islands', 'Upper-middle-income economies', 'Western Africa', 'Western Asia',
+                  'Western Asia and Northern Africa', 'Western Europe', 'Western Sahara', 'World', 'Yemen Ar Rp', 'Yemen Dem']
+
+for i in range(len(iso3_drop_rows)):
+    country_iso3.drop(
+        country_iso3[country_iso3['country_name'] == iso3_drop_rows[i]].index, inplace=True)
+
+
+# In[88]:
+
+
+df_temp = temp.copy()
+
+
+# In[89]:
+
+
+df_temp = df_temp.loc[df_temp.element == 'Temperature change']
+df_temp.drop(columns=['area_code', 'months_code',
+             'element_code', 'element'], inplace=True)
+df_temp.rename(columns={'area': 'country_name'}, inplace=True)
+
+
+# In[90]:
+
+
+df_temp_drop_rows = ['Africa', 'Americas', 'Annex I countries', 'Asia', 'Australia and New Zealand',
+                     'Caribbean small states', 'Central America', 'Central Asia', 'Eastern Africa', 'Eastern Asia',
+                     'Eastern Europe', 'Europe', 'European Union', 'Land Locked Developing Countries', 'Least Developed Countries',
+                     'Low Income Food Deficit Countries', 'Melanesia', 'Micronesia', 'Middle Africa',
+                     'Net Food Importing Developing Countries', 'Non-Annex I countries', 'Northern Africa',
+                     'Northern America', 'Northern Europe', 'Oceania', 'OECD', 'Polynesia', 'Small Island Developing States',
+                     'South America', 'South-Eastern Asia', 'Southern Africa', 'Southern Asia', 'Southern Europe',
+                     'Western Africa', 'Western Asia', 'Western Europe', 'Western Sahara', 'World', 'Caribbean',
+                     'China mainland', 'Pacific Islands Trust Territory', 'South Georgia and the South Sandwich Islands']
+
+for i in range(len(df_temp_drop_rows)):
+    df_temp.drop(df_temp[df_temp['country_name'] ==
+                 df_temp_drop_rows[i]].index, inplace=True)
+
+
+# In[91]:
+
+
+df_temp_rename = {'Bolivia': 'Bolivia (Plurinational State of)',
+                  'Bosnia and Herz.': 'Bosnia and Herzegovina',
+                  'Brunei': 'Brunei Darussalam',
+                  'Central African Rep.': 'Central African Republic',
+                  'Taiwan': 'China, Taiwan Province of',
+                  'China Hong Kong SAR': 'China, Hong Kong SAR',
+                  'China Macao SAR': 'China, Macao SAR',
+                  'Dem. Rep. Congo': 'Democratic Republic of the Congo',
+                  'Dominican Rep.': 'Dominican Republic',
+                  'Eq. Guinea': 'Equatorial Guinea',
+                  'eSwatini': 'Eswatini',
+                  'Falkland Is.': 'Falkland Islands (Malvinas)',
+                  'Fr. S. Antarctic Lands': 'French Southern Territories',
+                  'Iran': 'Iran (Islamic Republic of)',
+                  'Laos': 'Lao People\'s Democratic Republic',
+                  'Micronesia Fed. Sts.': 'Micronesia (Federated States of)',
+                  'Republic of Moldova': 'Moldova',
+                  'North Korea': 'Democratic People\'s Republic of Korea',
+                  'Pacific Islands Trust Territory': 'Pacific island small states',
+                  'Reunion': 'Réunion',
+                  'Russia': 'Russian Federation',
+                  'S. Sudan': 'South Sudan',
+                  'Solomon Is.': 'Solomon Islands',
+                  'South Korea': 'Republic of Korea',
+                  'St. Kitts and Nevis': 'Saint Kitts and Nevis',
+                  'St. Lucia': 'Saint Lucia',
+                  'St. Vincent and the Grenadines': 'Saint Vincent and the Grenadines',
+                  'Syria': 'Syrian Arab Republic',
+                  'Tanzania': 'United Republic of Tanzania',
+                  'Venezuela': 'Venezuela (Bolivarian Republic of)',
+                  'Vietnam': 'Viet Nam',
+                  'United Kingdom': 'United Kingdom of Great Britain and Northern Ireland',
+                  'Virgin Islands (U.S.)': 'United States Virgin Islands'}
+
+df_temp['country_name'] = df_temp['country_name'].replace(df_temp_rename)
+
+
+# In[92]:
+
+
+df_temp.reset_index(drop=True, inplace=True)
+df_temp
+
+
+# In[93]:
+
+
+df_temp = pd.merge(df_temp, country_iso3, how='inner', on='country_name')
+
+
+# In[94]:
+
+
+# df_temp
+
+
+# In[95]:
+
+
+df_temp = df_temp.melt(id_vars=["country_code", "country_name", "months"],
+                       value_vars=[str(n) for n in range(1961, 2019+1)],
+                       var_name="years",
+                       value_name="temp_changes")
+
+
+# In[96]:
+
+
+m_year = df_temp.months == 'Meteorological year'
+
+year_var = df_temp.loc[m_year, [
+    'country_code', 'country_name', 'years', 'temp_changes']].reset_index(drop=True)
+
+fig = px.choropleth(
+    year_var,
+    locations='country_code',
+    animation_frame='years',
+
+    color='temp_changes',
+    color_continuous_scale='balance',
+    range_color=[-2, 2.5],
+
+    hover_name='country_name',
+    hover_data=dict(country_code=None),
+
+    labels=dict(
+        years='Year',
+        temp_changes="Temperature Change (\u2103)"))
+
+fig.update_layout(
+    title='World Temperature Change from 1961 to 2019',
+    title_x=0.5,
+    title_y=0.95,
+    title_xanchor='center',
+    title_yanchor='top',
+
+    dragmode=False,
+
+    width=1000,
+    height=600)
+
+fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 250
+fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 80
+
+fig.show()
 
 
 # #### NORTHERN & CENTRAL AMERICA
@@ -1550,6 +2208,7 @@ asia_3_tmp = asia_3_tmp.rename(columns={'variable': 'Year',
 asia_3_tmp = asia_3_tmp.sort_values(by=['Area', 'Year'])
 
 # Making x variables
+
 # In[112]:
 
 x_mat = asia_3_tmp.Year.unique()
