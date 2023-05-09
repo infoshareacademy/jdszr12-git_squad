@@ -33,81 +33,6 @@ from scipy.interpolate import splrep, splev
 pd.set_option("display.width", 80)
 pd.set_option('display.float_format', lambda x: '%.3f' % x)
 
-# ### =================
-
-# In[26]:
-
-
-el_la = pd.read_csv("El-Nino.csv", sep=';', encoding="Windows-1250")
-# el_la
-
-# In[26]:
-
-
-el_la_to_drop = [1950, 1951, 1952, 1953,
-                 1954, 1955, 1956, 1957, 1958, 1959, 1960]
-
-for i in range(len(el_la_to_drop)):
-    el_la.drop(el_la[el_la['year'] == el_la_to_drop[i]].index, inplace=True)
-
-# In[26]:
-
-
-el_la.reset_index(drop=True, inplace=True)
-# el_la
-
-
-# In[26]:
-
-
-# El Niño
-# 0.5 START
-# 0.5 Weak
-# 1.0 Moderate
-# 1.5 Strong
-# 2.0 Very Strong
-# La Niña
-# -0.5 START
-# -0.5 Weak
-# -1.0 Moderate
-# -1.5 Strong
-# -2.0 Very Strong
-
-# In[26]:
-
-
-el_la['mean'] = ''
-
-# In[26]:
-
-
-for i in range(el_la.shape[0]):
-    el_la.iloc[i, -1] = round(np.mean(el_la.loc[i][-13:-1]), 1)
-
-# In[26]:
-
-
-el_la.drop(['January', 'February', 'March', 'April', 'May', 'June', 'July',
-           'August', 'September', 'October', 'November', 'December'], axis=1, inplace=True)
-# el_la #.reset_index()
-
-# In[26]:
-
-
-el_la['area'] = 'El Nino - La Nina'
-
-# In[26]:
-
-
-el_la_p = el_la.pivot(index='area', columns='year', values='mean')
-
-el_la_p = el_la_p.reset_index()
-
-# In[26]:
-
-
-el_la_p
-
 # In[ ]:
 
 # Default DataFrame
@@ -567,7 +492,7 @@ antarctica_t_ok = antarctica_t.iloc[:, -59:]
 
 jaro.iloc[:, -59:].isna().sum()
 
-# ### =======================
+# =======================
 
 # In[3]:
 
