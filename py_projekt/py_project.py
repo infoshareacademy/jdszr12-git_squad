@@ -585,7 +585,8 @@ el_la_p
 # In[]:
 
 
-temp = df.copy()
+temp = pd.read_csv(
+    "Environment_Temperature_change_E_All_Data_NOFLAG.csv", encoding="Windows-1250")
 
 
 # In[]:
@@ -597,10 +598,6 @@ temp['Months'].unique()
 # In[]:
 
 
-temp['Months'] = temp['Months'].replace("Dec–Jan–Feb", "Winter")
-temp['Months'] = temp['Months'].replace("Mar–Apr–May", "Spring")
-temp['Months'] = temp['Months'].replace("Jun–Jul–Aug", "Summer")
-temp['Months'] = temp['Months'].replace("Sep–Oct–Nov", "Autumn")
 temp.columns = temp.columns.str.replace('Y', '')
 temp.drop('Unit', axis=1, inplace=True)
 temp = temp.rename(columns={"Area Code": "area_code",
@@ -609,6 +606,10 @@ temp = temp.rename(columns={"Area Code": "area_code",
                             "Months": "months",
                             "Element Code": "element_code",
                             "Element": "element"})
+# temp['Months'] = temp['Months'].replace("Dec–Jan–Feb", "Winter")
+# temp['Months'] = temp['Months'].replace("Mar–Apr–May", "Spring")
+# temp['Months'] = temp['Months'].replace("Jun–Jul–Aug", "Summer")
+# temp['Months'] = temp['Months'].replace("Sep–Oct–Nov", "Autumn")
 
 
 # In[]:
@@ -917,28 +918,19 @@ world_t_ok = world_t.iloc[:, -59:]
 
 x = world_t_ok.columns
 y1 = world_t_ok.values.T
-
-# get first row
-el_la_row = el_la_plot.iloc[0]
-
-# convert row to numpy array
-el_la_array = el_la_row.to_numpy()
+el_la_row = el_la_plot.iloc[0]  # get first row
+el_la_array = el_la_row.to_numpy()  # convert row to numpy array
 y2 = el_la_array.T
-
 plt.plot(x, y1, label='World')
-
 plt.plot(x, y2, label='El Nino / La Nina')
 plt.axhline(y=0.0, color='r', linestyle='-')
-
 ymax = np.max(y2)
 ymin = np.min(y2)
-
 for i in range(len(y2)):
     if y2[i] == ymax:
         plt.axvspan(x[i], x[i+1], alpha=0.2, color='red')
     elif y2[i] == ymin:
         plt.axvspan(x[i], x[i+1], alpha=0.2, color='blue')
-
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('year')
@@ -1122,33 +1114,25 @@ fig = px.choropleth(
     year_var,
     locations='country_code',
     animation_frame='years',
-
     color='temp_changes',
     color_continuous_scale='balance',
     range_color=[-2, 2.5],
-
     hover_name='country_name',
     hover_data=dict(country_code=None),
-
     labels=dict(
         years='Year',
         temp_changes="Temperature Change (\u2103)"))
-
 fig.update_layout(
     title='World Temperature Change from 1961 to 2019',
     title_x=0.5,
     title_y=0.95,
     title_xanchor='center',
     title_yanchor='top',
-
     dragmode=False,
-
     width=1000,
     height=600)
-
 fig.layout.updatemenus[0].buttons[0].args[1]['frame']['duration'] = 250
 fig.layout.updatemenus[0].buttons[0].args[1]['transition']['duration'] = 80
-
 fig.show()
 
 
