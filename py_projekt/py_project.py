@@ -2073,26 +2073,34 @@ plt.show()
 
 # ##### Chart - temperature change vs value of CO2
 
-# In[27]:
+# In[60]:
+
+
+SouthAmerica_temp_CO2
+
+SouthAmerica_temp_CO2.CO2 = round((SouthAmerica_temp_CO2.CO2/1000), 2)
+
+
+# In[177]:
 
 
 Argentina_temp_CO2 = SouthAmerica_temp_CO2[(SouthAmerica_temp_CO2.Area == 'Argentina')]
 
 fig, ax1 = plt.subplots()
 ax1.set_xlabel('Rok')
-ax1.set_ylabel('CO2 [kt]', color='#FF6600')
+ax1.set_ylabel('CO2 [mln t]', color='#FF6600')
 ax1.bar(Argentina_temp_CO2.Year, Argentina_temp_CO2.CO2, label = 'Argentyna', color ='#FF6600')
 ax1.tick_params(axis='y', labelcolor='#FF6600')
 
 ax2 = ax1.twinx()  
 
-ax2.set_ylabel('Temperatura\u2103', color='#000000') 
+ax2.set_ylabel('Zmiana temperatury\u2103', color='#000000') 
 ax2.plot(Argentina_temp_CO2.Year, Argentina_temp_CO2.Temperature, label = 'Argentyna', color = '#000000')
 ax2.tick_params(axis='y', labelcolor='#000000')
 
 fig.tight_layout()  
 plt.title('Argentyna: średnioroczne zmiany temperatury vs emisja CO2 (1961-2019)')
-
+plt.ylim(-1,2.5)
 
 
 
@@ -2100,19 +2108,19 @@ Brazil_temp_CO2 = SouthAmerica_temp_CO2[(SouthAmerica_temp_CO2.Area == 'Brazil')
 
 fig, ax1 = plt.subplots()
 ax1.set_xlabel('Rok')
-ax1.set_ylabel('CO2 [kt]', color='#FF6600')
+ax1.set_ylabel('CO2 [mln t]', color='#FF6600')
 ax1.bar(Brazil_temp_CO2.Year, Brazil_temp_CO2.CO2, label = 'Brazylia', color ='#FF6600')
 ax1.tick_params(axis='y', labelcolor='#FF6600')
 
 ax2 = ax1.twinx()  
 
-ax2.set_ylabel('Temperatura\u2103', color='#000000') 
+ax2.set_ylabel('Zmiana temperatury\u2103', color='#000000') 
 ax2.plot(Brazil_temp_CO2.Year, Brazil_temp_CO2.Temperature, label = 'Brazylia', color = '#000000')
 ax2.tick_params(axis='y', labelcolor='#000000')
 
 fig.tight_layout()  
 plt.title('Brazylia: średnioroczne zmiany temperatury vs emisja CO2 (1961-2019)')
-
+plt.ylim(-1,2.5)
 
 
 
@@ -2120,19 +2128,20 @@ Peru_temp_CO2 = SouthAmerica_temp_CO2[(SouthAmerica_temp_CO2.Area == 'Peru')]
 
 fig, ax1 = plt.subplots()
 ax1.set_xlabel('Rok')
-ax1.set_ylabel('CO2 [kt]', color='#FF6600')
+ax1.set_ylabel('CO2 [mln t]', color='#FF6600')
 ax1.bar(Peru_temp_CO2.Year, Peru_temp_CO2.CO2, label = 'Peru', color ='#FF6600')
 ax1.tick_params(axis='y', labelcolor='#FF6600')
 
 ax2 = ax1.twinx()  
 
-ax2.set_ylabel('Temperatura\u2103', color='#000000')
+ax2.set_ylabel('Zmiana temperatury\u2103', color='#000000')
 ax2.plot(Peru_temp_CO2.Year, Peru_temp_CO2.Temperature, label = 'Peru', color = '#000000')
 ax2.tick_params(axis='y', labelcolor='#000000')
 
 fig.tight_layout()  
 plt.title('Peru: średnioroczne temperatury vs emisja CO2 (1961-2019)')
 
+plt.ylim(-1,2.5)
 plt.show()
 
 
@@ -2142,7 +2151,7 @@ plt.show()
 
 # In[474]:
 
-# In[23]:
+# In[20]:
 
 
 SouthAmerica_GDP = pd.read_csv('GDP_percapita.csv')
@@ -2150,7 +2159,7 @@ SouthAmerica_GDP = pd.read_csv('GDP_percapita.csv')
 
 # In[475]:
 
-# In[24]:
+# In[21]:
 
 
 del SouthAmerica_GDP['Code']
@@ -2159,7 +2168,7 @@ del SouthAmerica_GDP['Unnamed: 65']
 
 # In[476]:
 
-# In[25]:
+# In[22]:
 
 
 SouthAmerica_GDP = SouthAmerica_GDP.rename(columns={'Country Name':'Area'})
@@ -2167,7 +2176,7 @@ SouthAmerica_GDP = SouthAmerica_GDP.rename(columns={'Country Name':'Area'})
 
 # In[477]:
 
-# In[26]:
+# In[23]:
 
 
 SouthAmerica_GDP = SouthAmerica_GDP[(SouthAmerica_GDP.Area == 'Argentina') | (SouthAmerica_GDP.Area == 'Brazil')
@@ -2181,7 +2190,7 @@ SouthAmerica_GDP
 
 # In[478]:
 
-# In[27]:
+# In[24]:
 
 
 SouthAmerica_GDP_mdf = pd.melt(SouthAmerica_GDP, id_vars='Area')
@@ -2192,7 +2201,7 @@ SouthAmerica_GDP_mdf
 
 # In[479]:
 
-# In[28]:
+# In[25]:
 
 
 SouthAmerica_GDP_mdf.Year = pd.to_numeric(SouthAmerica_GDP_mdf.Year)
@@ -2224,7 +2233,7 @@ plt.show()
 
 # In[33]:
 
-# In[30]:
+# In[26]:
 
 
 SouthAmerica_forestation = pd.read_csv('forest.csv')
@@ -2232,7 +2241,7 @@ SouthAmerica_forestation = pd.read_csv('forest.csv')
 
 # In[34]:
 
-# In[31]:
+# In[27]:
 
 
 del SouthAmerica_forestation['country_code']
@@ -2240,7 +2249,7 @@ del SouthAmerica_forestation['country_code']
 
 # In[35]:
 
-# In[32]:
+# In[28]:
 
 
 SouthAmerica_forestation = SouthAmerica_forestation[(SouthAmerica_forestation.country_name == 'Argentina') | (SouthAmerica_forestation.country_name == 'Brazil')
@@ -2250,7 +2259,7 @@ SouthAmerica_forestation
 
 # In[36]:
 
-# In[33]:
+# In[29]:
 
 
 SouthAmerica_forestation = SouthAmerica_forestation.rename(columns={'country_name':'Area', 'year':'Year', 'value': 'Forestation_percent'})
@@ -2259,7 +2268,7 @@ SouthAmerica_forestation
 
 # In[37]:
 
-# In[34]:
+# In[30]:
 
 
 SouthAmerica_forestation.Year = pd.to_numeric(SouthAmerica_forestation.Year)
@@ -2271,7 +2280,7 @@ SouthAmerica_forestation.Year = pd.to_numeric(SouthAmerica_forestation.Year)
 
 # In[489]:
 
-# In[35]:
+# In[31]:
 
 
 SouthAmerica_urban = pd.read_csv('share-of-population-urban.csv')
@@ -2279,7 +2288,7 @@ SouthAmerica_urban = pd.read_csv('share-of-population-urban.csv')
 
 # In[490]:
 
-# In[36]:
+# In[32]:
 
 
 del SouthAmerica_urban['Code']
@@ -2287,7 +2296,7 @@ del SouthAmerica_urban['Code']
 
 # In[491]:
 
-# In[37]:
+# In[33]:
 
 
 SouthAmerica_urban = SouthAmerica_urban.rename(columns={'Entity':'Area', 
@@ -2296,7 +2305,7 @@ SouthAmerica_urban = SouthAmerica_urban.rename(columns={'Entity':'Area',
 
 # In[492]:
 
-# In[38]:
+# In[34]:
 
 
 SouthAmerica_urban = SouthAmerica_urban[(SouthAmerica_urban.Area == 'Argentina') 
@@ -2307,7 +2316,7 @@ SouthAmerica_urban
 
 # In[493]:
 
-# In[39]:
+# In[35]:
 
 
 SouthAmerica_urban.Year = pd.to_numeric(SouthAmerica_urban.Year)
@@ -2319,7 +2328,7 @@ SouthAmerica_urban.Year = pd.to_numeric(SouthAmerica_urban.Year)
 
 # In[497]:
 
-# In[40]:
+# In[36]:
 
 
 SouthAmerica_temp_CO2 = pd.merge(SouthAmerica_temp_mdf, SouthAmerica_CO2, on =['Area','Year'], how = 'left')
@@ -2866,6 +2875,155 @@ plt.show()
 
 # In[ ]:
 
+# ##### Regression: CO2 vs GDP per capita
+
+# In[51]:
+
+
+SouthAmerica_temp_CO2_GDP_forest_urb
+
+SouthAmerica_temp_CO2_GDP_forest_urb.CO2 = round((SouthAmerica_temp_CO2_GDP_forest_urb.CO2/1000), 2)
+
+
+# In[186]:
+
+
+sns.set_context('paper')
+l=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Argentina'))],
+                                    
+            x="GDP_per_capita",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Blues')
+l.set(xlabel = 'PKB per capita [$]', ylabel = "CO2 [mln t]")
+plt.title('Argentyna')
+
+l1=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Brazil'))],
+                                    
+            x="GDP_per_capita",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Blues')
+l1.set(xlabel = 'PKB per capita [$]', ylabel = "CO2 [mln t]")
+plt.title('Brazylia')
+plt.ylim(0,500)
+plt.xlim(0,14000)
+
+l2=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Peru'))],
+                                    
+            x="GDP_per_capita",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Blues')
+l2.set(xlabel = 'PKB per capita [$]', ylabel = "CO2 [mln t]")
+plt.title('Peru')
+plt.show()
+
+
+# In[ ]:
+
+# ##### Regression: CO2 vs forestation
+
+# In[185]:
+
+
+sns.set_context('paper')
+l=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Argentina'))],
+                                    
+            x="Forestation_percent",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+l.set(xlabel = 'Zalesienie [%]', ylabel = "CO2 [mln t]")
+plt.title('Argentyna')
+plt.ylim(0,500)
+
+l1=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Brazil'))],
+                                    
+            x="Forestation_percent",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+l1.set(xlabel = 'Zalesienie [%]', ylabel = "CO2 [mln t]")
+plt.title('Brazylia')
+plt.ylim(0,500)
+
+l2=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Peru'))],
+                                    
+            x="Forestation_percent",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+l2.set(xlabel = 'Zalesienie [%]', ylabel = "CO2 [mln t]")
+plt.title('Peru')
+plt.ylim(0,500)
+plt.show()
+
+
+# In[ ]:
+
+# ##### Regression: CO2 vs urbanization rate
+
+# In[187]:
+
+
+sns.set_context('paper')
+l=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Argentina'))],
+                                    
+            x="Urbanization_rate_percent",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'gray')
+l.set(xlabel = 'Współczynnik urbanizacji [%]', ylabel = "CO2 [mln t]")
+plt.title('Argentyna')
+
+l1=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Brazil'))],
+                                    
+            x="Urbanization_rate_percent",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'gray')
+l1.set(xlabel = 'Współczynnik urbanizacji [%]', ylabel = "CO2 [mln t]")
+plt.title('Brazylia')
+plt.ylim(0,500)
+
+l2=sns.lmplot(data=SouthAmerica_temp_CO2_GDP_forest_urb[((SouthAmerica_temp_CO2_GDP_forest_urb['Area'] == 'Peru'))],
+                                    
+            x="Urbanization_rate_percent",
+            y="CO2",
+            aspect=2.5, 
+            col = 'Area',
+            hue = 'Area',
+            palette = 'gray')
+l2.set(xlabel = 'Współczynnik urbanizacji [%]', ylabel = "CO2 [mln t]")
+plt.title('Peru')
+plt.show()
+
+
+# In[ ]:
+
+
+
+
+
+# In[ ]:
+
 # Correlation Argentina
 
 # In[500]:
@@ -3063,14 +3221,14 @@ plt.show()
 
 # #### DataFrame with temperature change 
 
-# In[26]:
+# In[122]:
 
 
 NHemisphere = pd.read_csv('northern_hemisphere.csv')
 NHemisphere
 
 
-# In[27]:
+# In[123]:
 
 
 NHemisphere_temp = pd.melt(NHemisphere, id_vars='Season')
@@ -3079,13 +3237,13 @@ NHemisphere_temp = NHemisphere_temp.sort_values(by=['Season', 'Year'])
 NHemisphere_temp
 
 
-# In[28]:
+# In[124]:
 
 
 NHemisphere_temp.Year = pd.to_numeric(NHemisphere_temp.Year)
 
 
-# In[37]:
+# In[125]:
 
 
 NHemisphere_temp_1 = NHemisphere_temp[((NHemisphere_temp.Season == 'winter') & (NHemisphere_temp.Year == 1974))
@@ -3144,7 +3302,7 @@ g.set_axis_labels("", "Temperatura [°C]")
 g.tight_layout()
 
 
-# In[29]:
+# In[126]:
 
 
 NHemisphere_temp_3 = NHemisphere_temp[(NHemisphere_temp.Season == 'northern_temp_meteo_year')]
@@ -3157,14 +3315,14 @@ NHemisphere_temp_3
 
 # #### DataFrame with temperature change
 
-# In[30]:
+# In[127]:
 
 
 SHemisphere = pd.read_csv('southern_hemisphere.csv')
 SHemisphere
 
 
-# In[31]:
+# In[128]:
 
 
 SHemisphere_temp = pd.melt(SHemisphere, id_vars='Season')
@@ -3173,13 +3331,13 @@ SHemisphere_temp = SHemisphere_temp.sort_values(by=['Season', 'Year'])
 SHemisphere_temp
 
 
-# In[32]:
+# In[129]:
 
 
 SHemisphere_temp.Year = pd.to_numeric(SHemisphere_temp.Year)
 
 
-# In[41]:
+# In[130]:
 
 
 SHemisphere_temp_1 = SHemisphere_temp[((SHemisphere_temp.Season == 'winter') & (SHemisphere_temp.Year == 1974))
@@ -3238,7 +3396,7 @@ g.set_axis_labels("", "Temperatura [°C]")
 g.tight_layout()
 
 
-# In[33]:
+# In[131]:
 
 
 SHemisphere_temp_3 = SHemisphere_temp[(SHemisphere_temp.Season == 'southern_temp_meteo_year')]
@@ -3261,7 +3419,7 @@ plt.legend()
 plt.show()
 
 
-# In[49]:
+# In[132]:
 
 
 x1=NHemisphere_temp_3.Year.unique()
@@ -3289,20 +3447,20 @@ plt.plot(x2, bspl_y2, 'k--', label = 'Półkula Południowa')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5) 
 plt.xlabel('Rok')
-plt.ylabel('Temperatura\u2103')
+plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
 plt.show()
 
 
-# In[39]:
+# In[133]:
 
 
 Hemispheres = pd.merge(NHemisphere_temp_3, SHemisphere_temp_3, on =['Season','Year', 'Temperature'], how = 'outer')
 Hemispheres
 
 
-# In[48]:
+# In[134]:
 
 
 Hemispheres_1 = Hemispheres[(((Hemispheres.Season == 'northern_temp_meteo_year') & (Hemispheres.Year == 1961))
@@ -3319,7 +3477,7 @@ Hemispheres_1 = Hemispheres[(((Hemispheres.Season == 'northern_temp_meteo_year')
 Hemispheres_1
 
 
-# In[61]:
+# In[139]:
 
 
 Hemispheres_1
@@ -3331,7 +3489,7 @@ g = sns.catplot(
     palette="bone", alpha=.6, height=6
 )
 g.despine(left=True)
-g.set_axis_labels("Rok", "Temperatura\u2103")
+g.set_axis_labels("Rok", "Zmiana temperatury\u2103")
 g.legend.set_title("Średnioroczne zmiany temperatury")
 
 
@@ -3359,14 +3517,14 @@ g.legend.set_title("Średnioroczne zmiany temperatury")
 
 # #### DataFrame with temperature change
 
-# In[62]:
+# In[140]:
 
 
 climatic_zone = pd.read_csv('climatic_zones.csv')
 climatic_zone
 
 
-# In[63]:
+# In[141]:
 
 
 climatic_zone_temp = pd.melt(climatic_zone, id_vars='Strefa')
@@ -3375,13 +3533,13 @@ climatic_zone_temp = climatic_zone_temp.sort_values(by=['Strefa', 'Year'])
 climatic_zone_temp
 
 
-# In[64]:
+# In[142]:
 
 
 climatic_zone_temp.Year = pd.to_numeric(climatic_zone_temp.Year)
 
 
-# In[65]:
+# In[143]:
 
 
 climatic_zone_temp_1 = climatic_zone_temp[((climatic_zone_temp.Strefa == 'A_okołobiegunowa (N)') & (climatic_zone_temp.Year == 1961))
@@ -3434,7 +3592,7 @@ Climatic_zone_temp_2=climatic_zone_temp_1.sort_values(ascending = True, by= ['St
 Climatic_zone_temp_2
 
 
-# In[103]:
+# In[146]:
 
 
 Climatic_zone_temp_2
@@ -3464,7 +3622,7 @@ ax.set_xticks(ax.get_xticks()[::1])
 
 # Tweak the supporting aspects of the plot
 g.set_titles("")
-g.set_axis_labels("Strefa klimatyczna", "Temperatura\u2103")
+g.set_axis_labels("Strefa klimatyczna", "Zmiana temperatury\u2103")
 g.set_xticklabels(rotation=60)
 g.tight_layout()
 
@@ -3490,7 +3648,7 @@ plt.legend()
 plt.show()
 
 
-# In[25]:
+# In[148]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3510,13 +3668,39 @@ plt.plot(x1, bspl_y2, 'k--', label = 'strefa okołobiegunowa (S)')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5) 
 plt.xlabel('Rok')
-plt.ylabel('Temperatura\u2103')
+plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
 plt.show()
 
 
-# In[67]:
+# In[149]:
+
+
+x1=climatic_zone_temp.Year.unique()
+x1 = x1.astype(np.int64)
+
+y1_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'A_okołobiegunowa (N)'].iloc[:,2].values.T
+y2_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'I_okołobiegunowa (S)'].iloc[:,2].values.T
+bspl1 = splrep(x1, y1_temp, s=4)
+bspl_y1 = splev(x1, bspl1) 
+
+bspl2 = splrep(x1, y2_temp, s=4)
+bspl_y2 = splev(x1, bspl2)
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x1, bspl_y1, 'b-', label = 'strefa okołobiegunowa (N)')
+plt.plot(x1, bspl_y2, 'b--', label = 'strefa okołobiegunowa (S)')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5) 
+plt.xlabel('Rok')
+plt.ylabel('Zmiana temperatury\u2103')
+plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
+plt.legend()
+plt.show()
+
+
+# In[151]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3536,13 +3720,39 @@ plt.plot(x1, bspl_y2, 'k--', label = 'strefa umiarkowana (S)')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5) 
 plt.xlabel('Rok')
-plt.ylabel('Temperatura\u2103')
+plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
 plt.show()
 
 
-# In[70]:
+# In[152]:
+
+
+x1=climatic_zone_temp.Year.unique()
+x1 = x1.astype(np.int64)
+
+y1_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'B_umiarkowana (N)'].iloc[:,2].values.T
+y2_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'H_umiarkowana (S)'].iloc[:,2].values.T
+bspl1 = splrep(x1, y1_temp, s=4)
+bspl_y1 = splev(x1, bspl1) 
+
+bspl2 = splrep(x1, y2_temp, s=4)
+bspl_y2 = splev(x1, bspl2)
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x1, bspl_y1, 'g-', label = 'strefa umiarkowana (N)')
+plt.plot(x1, bspl_y2, 'g--', label = 'strefa umiarkowana (S)')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5) 
+plt.xlabel('Rok')
+plt.ylabel('Zmiana temperatury\u2103')
+plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
+plt.legend()
+plt.show()
+
+
+# In[153]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3562,13 +3772,39 @@ plt.plot(x1, bspl_y2, 'k--', label = 'strefa podzwrotnikowa (S)')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5) 
 plt.xlabel('Rok')
-plt.ylabel('Temperatura\u2103')
+plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
 plt.show()
 
 
-# In[20]:
+# In[162]:
+
+
+x1=climatic_zone_temp.Year.unique()
+x1 = x1.astype(np.int64)
+
+y1_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'C_podzwrotnikowa (N)'].iloc[:,2].values.T
+y2_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'G_podzwrotnikowa (S)'].iloc[:,2].values.T
+bspl1 = splrep(x1, y1_temp, s=4)
+bspl_y1 = splev(x1, bspl1) 
+
+bspl2 = splrep(x1, y2_temp, s=4)
+bspl_y2 = splev(x1, bspl2)
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x1, bspl_y1, 'y-', label = 'strefa podzwrotnikowa (N)')
+plt.plot(x1, bspl_y2, 'y--', label = 'strefa podzwrotnikowa (S)')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5) 
+plt.xlabel('Rok')
+plt.ylabel('Zmiana temperatury\u2103')
+plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
+plt.legend()
+plt.show()
+
+
+# In[156]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3588,13 +3824,39 @@ plt.plot(x1, bspl_y2, 'k--', label = 'strefa zwrotnikowa (S)')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5) 
 plt.xlabel('Rok')
-plt.ylabel('Temperatura\u2103')
+plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
 plt.show()
 
 
-# In[72]:
+# In[173]:
+
+
+x1=climatic_zone_temp.Year.unique()
+x1 = x1.astype(np.int64)
+
+y1_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'D_zwrotnikowa (N)'].iloc[:,2].values.T
+y2_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'F_zwrotnikowa (S)'].iloc[:,2].values.T
+bspl1 = splrep(x1, y1_temp, s=4)
+bspl_y1 = splev(x1, bspl1) 
+
+bspl2 = splrep(x1, y2_temp, s=4)
+bspl_y2 = splev(x1, bspl2)
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x1, bspl_y1, 'tab:orange', label = 'strefa zwrotnikowa (N)')
+plt.plot(x1, bspl_y2, 'k--',label = 'strefa zwrotnikowa (S)')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5) 
+plt.xlabel('Rok')
+plt.ylabel('Zmiana temperatury\u2103')
+plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
+plt.legend()
+plt.show()
+
+
+# In[174]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3619,16 +3881,41 @@ plt.plot(x1, bspl_y3, 'k.', label = 'pozostałe strefy (S)')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5) 
 plt.xlabel('Rok')
-plt.ylabel('Temperatura\u2103')
+plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
 plt.show()
 
 
-# In[ ]:
+# In[175]:
 
 
+x1=climatic_zone_temp.Year.unique()
+x1 = x1.astype(np.int64)
 
+y1_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'J_pozostałe_strefy_(N)'].iloc[:,2].values.T
+y2_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'E_równikowa'].iloc[:,2].values.T
+y3_temp = climatic_zone_temp[climatic_zone_temp.Strefa == 'K_pozostałe_strefy_(S)'].iloc[:,2].values.T
+bspl1 = splrep(x1, y1_temp, s=4)
+bspl_y1 = splev(x1, bspl1) 
+
+bspl2 = splrep(x1, y2_temp, s=4)
+bspl_y2 = splev(x1, bspl2)
+
+bspl3 = splrep(x1, y3_temp, s=4)
+bspl_y3 = splev(x1, bspl3)
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x1, bspl_y1, 'k--', label = 'pozostałe strefy (N)')
+plt.plot(x1, bspl_y2, 'r-', label = 'strefa równikowa')
+plt.plot(x1, bspl_y3, 'k.', label = 'pozostałe strefy (S)')
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5) 
+plt.xlabel('Rok')
+plt.ylabel('Zmiana temperatury\u2103')
+plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
+plt.legend()
+plt.show()
 
 
 # In[ ]:
