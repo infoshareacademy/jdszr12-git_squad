@@ -3028,7 +3028,7 @@ plt.show()
 
 # In[500]:
 
-# In[50]:
+# In[37]:
 
 
 corr_Argentina = SouthAmerica_temp_CO2_GDP_forest_urb[(SouthAmerica_temp_CO2_GDP_forest_urb.Area == 'Argentina')]
@@ -3036,7 +3036,7 @@ corr_Argentina = SouthAmerica_temp_CO2_GDP_forest_urb[(SouthAmerica_temp_CO2_GDP
 
 # In[501]:
 
-# In[51]:
+# In[38]:
 
 
 del corr_Argentina['Area']
@@ -3045,11 +3045,33 @@ del corr_Argentina['Year']
 
 # In[502]:
 
-# In[52]:
+# In[39]:
 
 
 corr_Argentina = corr_Argentina.corr()
 sns.heatmap(corr_Argentina, annot=True, cmap = 'Greens')
+plt.show()
+
+
+# In[62]:
+
+
+corr_Argentina = SouthAmerica_temp_CO2_GDP_forest_urb[(SouthAmerica_temp_CO2_GDP_forest_urb.Area == 'Argentina')]
+del corr_Argentina['Area']
+del corr_Argentina['Year']
+
+corr_Argentina.rename(columns = {'Temperature' : 'Temperatura', 'CO2': 'CO2', 'Forestation_percent' : 'Poziom zalesienia', 
+                                  'GDP_per_capita': 'PKB per capita', 'Urbanization_rate_percent': 'Poziom urbanizacji'}, inplace = True)
+corr_Argentina = corr_Argentina.corr()
+
+sns.heatmap(corr_Argentina, annot=True, cmap = 'Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6) 
+plt.xticks(rotation = 90)
+
+
+
 plt.show()
 
 
@@ -3086,6 +3108,28 @@ sns.heatmap(corr_Brazil, annot=True, cmap = "Greens")
 plt.show()
 
 
+# In[60]:
+
+
+corr_Brazil = SouthAmerica_temp_CO2_GDP_forest_urb[(SouthAmerica_temp_CO2_GDP_forest_urb.Area == 'Brazil')]
+del corr_Brazil['Area']
+del corr_Brazil['Year']
+
+corr_Brazil.rename(columns = {'Temperature' : 'Temperatura', 'CO2': 'CO2', 'Forestation_percent' : 'Poziom zalesienia', 
+                                  'GDP_per_capita': 'PKB per capita', 'Urbanization_rate_percent': 'Poziom urbanizacji'}, inplace = True)
+corr_Brazil = corr_Brazil.corr()
+
+sns.heatmap(corr_Brazil, annot=True, cmap = 'Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6) 
+plt.xticks(rotation = 90)
+
+
+
+plt.show()
+
+
 # In[ ]:
 
 # Correlation Peru
@@ -3114,6 +3158,28 @@ del corr_Peru['Year']
 
 corr_Peru = corr_Peru.corr()
 sns.heatmap(corr_Peru, annot=True, cmap = "Greens")
+plt.show()
+
+
+# In[64]:
+
+
+corr_Peru = SouthAmerica_temp_CO2_GDP_forest_urb[(SouthAmerica_temp_CO2_GDP_forest_urb.Area == 'Peru')]
+del corr_Peru['Area']
+del corr_Peru['Year']
+
+corr_Peru.rename(columns = {'Temperature' : 'Temperatura', 'CO2': 'CO2', 'Forestation_percent' : 'Poziom zalesienia', 
+                                  'GDP_per_capita': 'PKB per capita', 'Urbanization_rate_percent': 'Poziom urbanizacji'}, inplace = True)
+corr_Peru = corr_Peru.corr()
+
+sns.heatmap(corr_Peru, annot=True, cmap = 'Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6) 
+plt.xticks(rotation = 90)
+
+
+
 plt.show()
 
 
@@ -3517,14 +3583,14 @@ g.legend.set_title("Średnioroczne zmiany temperatury")
 
 # #### DataFrame with temperature change
 
-# In[140]:
+# In[11]:
 
 
 climatic_zone = pd.read_csv('climatic_zones.csv')
 climatic_zone
 
 
-# In[141]:
+# In[12]:
 
 
 climatic_zone_temp = pd.melt(climatic_zone, id_vars='Strefa')
@@ -3533,13 +3599,13 @@ climatic_zone_temp = climatic_zone_temp.sort_values(by=['Strefa', 'Year'])
 climatic_zone_temp
 
 
-# In[142]:
+# In[13]:
 
 
 climatic_zone_temp.Year = pd.to_numeric(climatic_zone_temp.Year)
 
 
-# In[143]:
+# In[14]:
 
 
 climatic_zone_temp_1 = climatic_zone_temp[((climatic_zone_temp.Strefa == 'A_okołobiegunowa (N)') & (climatic_zone_temp.Year == 1961))
@@ -3648,7 +3714,7 @@ plt.legend()
 plt.show()
 
 
-# In[148]:
+# In[19]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3671,6 +3737,7 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.8, 3.2)
 plt.show()
 
 
@@ -3700,7 +3767,7 @@ plt.legend()
 plt.show()
 
 
-# In[151]:
+# In[20]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3723,10 +3790,11 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
-# In[152]:
+# In[21]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3749,10 +3817,11 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
-# In[153]:
+# In[22]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3775,10 +3844,11 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
-# In[162]:
+# In[23]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3801,10 +3871,11 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
-# In[156]:
+# In[24]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3827,10 +3898,11 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
-# In[173]:
+# In[28]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3852,11 +3924,12 @@ plt.subplots_adjust(left=-0.5)
 plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
+plt.ylim(-0.5, 1.5)
 plt.legend()
 plt.show()
 
 
-# In[174]:
+# In[26]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3884,10 +3957,11 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
-# In[175]:
+# In[27]:
 
 
 x1=climatic_zone_temp.Year.unique()
@@ -3915,6 +3989,7 @@ plt.xlabel('Rok')
 plt.ylabel('Zmiana temperatury\u2103')
 plt.title('Średnioroczne zmiany temperatury w latach 1961-2019')
 plt.legend()
+plt.ylim(-0.5, 1.5)
 plt.show()
 
 
