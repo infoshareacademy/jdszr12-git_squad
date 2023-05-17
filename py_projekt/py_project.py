@@ -1990,13 +1990,13 @@ sns.heatmap(corr_Mozambique, annot=True)
 plt.show()
 
 
-# #### MATTHIAS
+# #### ASIA
 
 # In[ ]:
 
 # Making individual variable for group purpose working
 
-# In[101]:
+#In[]:
 
 
 mateo = df.copy()
@@ -2004,7 +2004,7 @@ mateo = df.copy()
 
 # DataFrame with 5 countries from America (Northern & Central)
 
-# In[102]:
+#In[]:
 
 
 mateo1 = optional_1(mateo)
@@ -2014,7 +2014,7 @@ mateo1 = optional_1(mateo)
 
 # Creating individual Dataframe for countries in Asia
 
-# In[103]:
+#In[]:
 
 
 asia = mateo1[(mateo1.Continent_Code == 2) & (
@@ -2023,20 +2023,31 @@ asia = mateo1[(mateo1.Continent_Code == 2) & (
 
 # In[ ]:
 
-# In[104]:
+#In[]:
 
 
 get_ipython().run_line_magic('matplotlib', 'inline')
 x = world_t_ok.columns
 y1 = world_t_ok.values.T
-y2 = europe_t_ok.values.T
+y2 = asia_t_ok.values.T
+
+#In[ ]:
+
+x = x.astype(np.int64)
+
+# Smoothing plost for Asia and world
+#In[]:
+
+bspl_w = splrep(x,y1,s=4)   
+bspl_w_y1 = splev(x,bspl_w)
+
+bspl_a = splrep(x,y2,s=4)   
+bspl_a_y2 = splev(x,bspl_a)
+#In[]:
 
 
-# In[105]:
-
-
-plt.plot(x, y1, label='World')
-plt.plot(x, y2, label='Europe')
+plt.plot(x, bspl_w_y1, label='World')
+plt.plot(x, bspl_a_y2, label='Europe')
 plt.xticks(rotation=90)
 plt.subplots_adjust(left=-0.5)
 plt.xlabel('year')
@@ -2048,7 +2059,7 @@ plt.show()
 
 # Droping unnecessary columns
 
-# In[106]:
+#In[]:
 
 
 asia = asia.drop(columns=['Continent',
@@ -2065,7 +2076,7 @@ asia = asia.drop(columns=['Continent',
 
 # Repalcing unnecessary marks with space
 
-# In[107]:
+#In[]:
 
 
 asia.columns = asia.columns.str.replace('Y', '')
@@ -2076,16 +2087,16 @@ asia['Area'] = asia['Area'].str.replace("'", ' ')
 
 # Dataframe 3 Asia countries
 
-# In[108]:
+#In[]:
 
 
-asia_3 = asia[(asia.Area == 'India') | (
-    asia.Area == 'Republic of Korea') | (asia.Area == 'China')]
+asia_3 = asia[(asia.Area == 'India') | (asia.Area == 'Philippines') |
+               (asia.Area == 'China')]
 
 
 # In[ ]:
 
-# In[109]:
+#In[]:
 
 
 asia_3.isnull().sum()
@@ -2095,7 +2106,7 @@ asia_3.isnull().sum()
 
 # Transform teble
 
-# In[110]:
+#In[]:
 
 
 asia_3_tmp = pd.melt(asia_3, id_vars='Area')
@@ -2105,27 +2116,26 @@ asia_3_tmp = pd.melt(asia_3, id_vars='Area')
 
 # Renameing columns
 
-# In[111]:
+#In[]:
 
 
 asia_3_tmp = asia_3_tmp.rename(columns={'variable': 'Year',
                                         'value': 'Temp'})
 
 
-# In[ ]:
+#In[ ]:
 
 asia_3_tmp = asia_3_tmp.sort_values(by=['Area', 'Year'])
 
 # Making x variables
+#In[]:
 
-# In[112]:
+asia_3_tmp.Year = pd.to_numeric(asia_3_tmp.Year)
+
+
+#In[]:
 
 x_mat = asia_3_tmp.Year.unique()
-
-# Converting object in to int64
-# In[]:
-
-x_mat = x_mat.astype(np.int64)
 
 # Making y variables for 3 Asia countries
 
@@ -2133,7 +2143,7 @@ x_mat = x_mat.astype(np.int64)
 
 y1_tmp = asia_3_tmp[asia_3_tmp.Area == 'China'].iloc[:, 2].values.T
 y2_tmp = asia_3_tmp[asia_3_tmp.Area == 'India'].iloc[:, 2].values.T
-y3_tmp = asia_3_tmp[asia_3_tmp.Area == 'Republic of Korea'].iloc[:, 2].values.T
+y3_tmp = asia_3_tmp[asia_3_tmp.Area == 'Philippines'].iloc[:, 2].values.T
 
 # Preparing plots for smoothing
 
@@ -2148,10 +2158,12 @@ bspl_y2 = splev(x_mat, bspl2)
 bspl3 = splrep(x_mat, y3_tmp, s=12)
 bspl_y3 = splev(x_mat, bspl3)
 
+#In[ ]:
+
 get_ipython().run_line_magic('matplotlib', 'inline')
 plt.plot(x_mat, bspl_y1, label='Chiny')
 plt.plot(x_mat, bspl_y2, label='Indie')
-plt.plot(x_mat, bspl_y3, label='South Korea')
+plt.plot(x_mat, bspl_y3, label='Filipiny')
 
 
 plt.xticks(rotation=90)
@@ -2160,6 +2172,464 @@ plt.xlabel('year')
 plt.ylabel('temp \u2103')
 plt.title('Temperatures (1961-2019)')
 plt.legend()
+plt.show()
+
+# CO2 table for Asia
+#In[]:
+
+dfco2=pd.read_csv('co2.csv', encoding="Windows-1250")
+
+#In[]:
+
+asia_co2=dfco2[((dfco2.country_name== 'China') |
+                (dfco2.country_name== 'India') | 
+                (dfco2.country_name== 'Philippines')) & (dfco2.year > 1960 )]
+
+#In[]:
+
+asia_co2=asia_co2.rename(columns={'country_name' : 'Area',
+                                  'year' : 'Year',
+                                  'value' : 'CO2'})
+#In[]:
+
+asia_co2=asia_co2.drop(columns=['country_code'])
+
+#Switch to bilons CO2 values
+#In[]:
+
+asia_co2.CO2 = round(asia_co2.CO2/1000000,2)
+
+# Merge temp and CO2
+#In[]:
+
+asia_co2.Year = pd.to_numeric(asia_co2.Year)
+
+#In[]:
+
+asia_all = pd.merge(asia_3_tmp, asia_co2, on = ['Area','Year'], how = 'left')
+
+#Forest table for Asia
+#In[]:
+
+df_for = pd.read_csv('forest.csv')
+
+#In[]:
+
+asia_forest = df_for[((df_for.country_name == 'China') |
+                (df_for.country_name == 'India') | 
+                (df_for.country_name == 'Philippines'))]
+
+#In[]:
+
+asia_forest = asia_forest.rename(columns = {'country_name' : 'Area',
+                                            'year' : 'Year',
+                                            'value' : 'Zalesienie'})
+
+#In[]:
+
+asia_forest = asia_forest.drop(columns=['country_code'])
+
+#In[]:
+
+asia_forest.Year = pd.to_numeric(asia_forest.Year)
+
+#In[]:
+
+asia_all = pd.merge(asia_all, asia_forest, on=['Area', 'Year'], how = 'left')
+
+#GDP percapita table for Asia
+
+#In[]:
+
+df_gdp = pd.read_csv('GDP_percapita.csv')
+
+#In[]:
+
+df_gdp = df_gdp.rename(columns = {'Country Name' : 'Area'})
+
+#In[]:
+
+asia_gdp=df_gdp[(df_gdp.Area == 'China') |
+                (df_gdp.Area == 'India') | 
+                (df_gdp.Area == 'Philippines')]
+
+#In[]:
+
+asia_gdp = asia_gdp.drop(columns=['Code',
+                                  '1960',
+                                  'Unnamed: 65'])
+
+#In[]:
+
+asia_gdp = pd.melt(asia_gdp, id_vars = 'Area')
+
+#In[]:
+
+asia_gdp =asia_gdp.rename(columns= {'variable' : 'Year',
+                                       'value' : 'GDP' })
+
+#In[]:
+
+asia_gdp = asia_gdp.sort_values(by= ['Area','Year'])
+
+#In[]:
+
+asia_gdp.Year = pd.to_numeric(asia_gdp.Year)
+
+#In[]:
+
+asia_all = pd.merge(asia_all, asia_gdp, on=['Area', 'Year'], how = 'left')
+
+#Urbanization table for Asia
+#In[]:
+
+df_urban = pd.read_csv('share-of-population-urban.csv')
+
+#In[]:
+
+asia_urban = df_urban[((df_urban.Entity == 'China') |
+                      (df_urban.Entity == 'India') |
+                      (df_urban.Entity == 'Philippines')) & (df_urban.Year > 1960)]
+
+#In[]:
+
+asia_urban = asia_urban.rename(columns = {'Entity' : 'Area',
+                                          'Urban population (% of total population)' : 'Urbanization_%'})
+
+#In[]:
+
+asia_urban = asia_urban.drop(columns = ['Code'])
+
+#In[]:
+
+asia_all = pd.merge(asia_all, asia_urban, on = ['Area', 'Year'], how = 'left')
+
+#Correlation table for China
+#In[]:
+
+china = asia_all[asia_all.Area == 'China']
+
+#In[]:
+
+corr_china = china.drop(columns = ['Area', 'Year'])
+
+#In[]:
+
+corr_china1 = corr_china
+
+#In[]:
+
+corr_china1.rename(columns = {'Temp' : 'Temperatura', 
+                              'Zalesienie' : 'Poziom zalesienia', 
+                              'GDP' : 'PKB per capita', 
+                              'Urbanization_%': 'Poziom urbanizacji'}, inplace = True)
+
+#In[]:
+
+corr_china1 = corr_china1.corr()
+sns.heatmap(corr_china1, annot=True, cmap = 'Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
+plt.title('Chiny')
+plt.show()
+
+#Correlation table for India
+#In[]:
+
+india = asia_all[asia_all.Area == 'India']
+
+#In[]:
+
+corr_india = india.drop(columns = ['Area', 'Year'])
+
+#In[]:
+
+corr_india1 = corr_india
+
+#In[]:
+
+corr_india1.rename(columns = {'Temp' : 'Temperatura', 
+                              'Zalesienie' : 'Poziom zalesienia', 
+                              'GDP' : 'PKB per capita', 
+                              'Urbanization_%': 'Poziom urbanizacji'}, inplace = True)
+
+#In[]:
+
+corr_india1 = corr_india1.corr()
+sns.heatmap(corr_india1, annot=True, cmap = 'Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
+plt.title('Indie')
+plt.show()
+
+#Correlation table for Philipines
+#In[]:
+
+phil = asia_all[asia_all.Area == 'Philippines']
+
+#In[]:
+
+corr_phil = phil.drop(columns = ['Area', 'Year'])
+
+#In[]:
+
+corr_phil1 = corr_phil
+
+#In[]:
+
+corr_phil1.rename(columns = {'Temp' : 'Temperatura', 
+                             'Zalesienie' : 'Poziom zalesienia', 
+                             'GDP' : 'PKB per capita', 
+                             'Urbanization_%': 'Poziom urbanizacji'}, inplace = True)
+
+#In[]:
+
+corr_phil1 = corr_phil1.corr()
+sns.heatmap(corr_phil1, annot=True, cmap = 'Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
+plt.title('Filipiny')
+plt.show()
+
+#CO2 emission plots
+#In[]:
+
+y1_co2 = china.CO2
+y2_co2 = india.CO2
+y3_co2 = phil.CO2
+
+#In[]:
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+plt.plot(x_mat, y1_co2, label='Chiny')
+plt.bar(x_mat, y2_co2, label='Indie', color='orange')
+plt.bar(x_mat, y3_co2, label='Filipiny', color='green')
+
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('CO2')
+plt.title('Emisja CO2 (1961-2019)')
+plt.legend()
+plt.show()
+
+#In[]:
+
+fig, ax1 = plt.subplots()
+
+plt.xticks(rotation=90)
+
+ax1.set_ylabel('CO2 [bln t]', color='#FF6600') 
+ax1.bar(x_mat, y1_co2, color='#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
+
+ax2 = ax1.twinx() 
+
+ax2.set_ylabel('Temp', color='black')
+ax2.plot(x_mat, bspl_y1, color='black')
+ax2.tick_params(axis='y', labelcolor='black')
+plt.ylim([-1, 2.5])
+
+fig.tight_layout()  
+
+
+plt.subplots_adjust(left=-0.5)
+plt.title('Chiny zmiany temperatury i emisji CO2 (1961-2019)')
+plt.show()
+
+#In[]:
+
+fig, ax1 = plt.subplots()
+
+plt.xticks(rotation=90)
+
+ax1.set_ylabel('CO2', color='orange')  
+ax1.bar(x_mat, y2_co2, color='orange')
+ax1.tick_params(axis='y', labelcolor='orange')
+
+ax2 = ax1.twinx()  
+
+ax2.set_ylabel('Temp', color='red')
+ax2.plot(x_mat, bspl_y2, color='red')
+ax2.tick_params(axis='y', labelcolor='red')
+
+
+fig.tight_layout()  
+
+
+plt.subplots_adjust(left=-0.5)
+plt.title('Indie zmiany temperatury i emisji CO2 (1961-2019)')
+plt.show()
+
+#In[]:
+
+fig, ax1 = plt.subplots()
+
+plt.xticks(rotation=90)
+
+ax1.set_ylabel('CO2', color='limegreen')  
+ax1.bar(x_mat, y3_co2, color='limegreen')
+ax1.tick_params(axis='y', labelcolor='limegreen')
+
+ax2 = ax1.twinx()  
+
+ax2.set_ylabel('Temp', color='red')
+ax2.plot(x_mat, bspl_y3, color='red')
+ax2.tick_params(axis='y', labelcolor='red')
+
+
+fig.tight_layout()  
+
+
+plt.subplots_adjust(left=-0.5)
+plt.title('Filipiny zmiany temperatury i emisji CO2')
+plt.show()
+
+# Forestation plots for Asia
+#In[]:
+
+y1_for = china.Zalesienie
+y2_for = india.Zalesienie
+y3_for = phil.Zalesienie
+
+#In[]:
+
+get_ipython().run_line_magic('matplotlib', 'inline')
+
+plt.plot(x_mat, y3_for, label='Filipiny', color='darkgreen')
+plt.bar(x_mat, y2_for, label='Indie', color='orange')
+plt.bar(x_mat, y1_for, label='Chiny', color='royalblue')
+
+plt.xticks(rotation=90)
+plt.subplots_adjust(left=-0.5)
+plt.xlabel('year')
+plt.ylabel('forest')
+plt.title('Zalesienie (1990-2019)')
+plt.legend()
+plt.show()
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='China'],
+            x="Zalesienie",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+plt.xlabel('Zalesienie [%]')
+plt.ylabel('CO2 [bln t]')
+plt.title('Chiny')
+plt.show()
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='India'],
+            x="Zalesienie",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='Philippines'],
+            x="Zalesienie",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+
+#Urbanization plots for Asia
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='China'],
+            x="Urbanization_%",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greys')
+
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='India'],
+            x="Urbanization_%",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greys')
+
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='Philippines'],
+            x="Urbanization_%",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greys')
+
+#GDP plots for Asia
+#In[]:
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='China'],
+            x="GDP",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Blues')
+plt.xlabel('PKB per capita [$]')
+plt.ylabel('CO2 [bln t]')
+plt.title('Chiny')
+plt.show()
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='India'],
+            x="GDP",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Blues')
+plt.xlabel('PKB per capita [$]')
+plt.ylabel('CO2 [bln t]')
+plt.title('Chiny')
+plt.show()
+
+#In[]:
+
+sns.set_context('paper')
+sns.lmplot(data=asia_all[asia_all['Area']=='Philippines'],
+            x="GDP",
+            y="CO2",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Blues')
+plt.xlabel('PKB per capita [$]')
+plt.ylabel('CO2 [bln t]')
+plt.title('Chiny')
 plt.show()
 
 
