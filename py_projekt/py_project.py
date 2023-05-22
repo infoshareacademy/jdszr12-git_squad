@@ -1139,30 +1139,16 @@ fig.show()
 # #### NORTHERN & CENTRAL AMERICA
 
 # In[ ]:
-
-# Making individual variable for group purpose working
-
-# DataFrame with 5 countries from America (Northern & Central
-
-# In[40]:
-
+# DataFrame with 3 countries from America (Northern & Central
 
 NAmerica = df.copy()
 NAmerica = optional_1(NAmerica)
-NAmerica_full = NAmerica[(NAmerica.Continent == 'North America')]
+NAmerica_full= NAmerica [(NAmerica.Continent == 'North America')]
 NAmerica_c3 = NAmerica_full[(NAmerica_full.Area == 'Canada')
-                            | (NAmerica_full.Area == 'United States of America')
-                            | (NAmerica_full.Area == 'Dominican Republic')]
+              | (NAmerica_full.Area == 'United States of America')
+                | (NAmerica_full.Area == 'Dominican Republic')]
 NAmerica_c3 = NAmerica_c3[(NAmerica_c3.Months == 'Meteorological year')
-                          & (NAmerica_c3.Element == 'Temperature change')]
-NAmerica_c3
-
-
-# Inp[]:<br>
-# reparing data
-
-# In[41]:
-
+              & (NAmerica_c3.Element == 'Temperature change')]
 
 NAmerica_c3.columns = NAmerica_c3.columns.str.replace('Y', '')
 del NAmerica_c3['Area_Code']
@@ -1184,7 +1170,7 @@ NAmerica_c3
 
 NAmerica_trans = pd.melt(NAmerica_c3, id_vars='Area')
 NAmerica_trans = NAmerica_trans.rename(columns={'variable': 'Year',
-                                                'value': 'Temp'})
+                              'value': 'Temp'})
 NAmerica_trans = NAmerica_trans.sort_values(by=['Area', 'Year'])
 NAmerica_trans.Year = pd.to_numeric(NAmerica_trans.Year)
 NAmerica_trans.info()
@@ -1198,26 +1184,15 @@ NAmerica_trans.info()
 
 NAmerica_forest = pd.read_csv('forest.csv')
 NAmerica_forest = NAmerica_forest[(NAmerica_forest.country_name == 'Canada')
-                                  | (NAmerica_forest.country_name == 'United States')
-                                  | (NAmerica_forest.country_name == 'Dominican Republic')]
-
-
-# In[44]:
-
+                | (NAmerica_forest.country_name == 'United States')
+                | (NAmerica_forest.country_name == 'Dominican Republic')]
 
 NAmerica_forest = NAmerica_forest.rename(columns={'year': 'Year',
-                                                  'country_name': 'Area',
-                                                  'value': 'Forest'})
-
-
-# In[45]:
-
+                                'country_name': 'Area',
+                                'value': 'Forest'})
 
 NAmerica_forest.replace(to_replace="United States",
-                        value="United States of America", inplace=True)
-
-
-# In[46]:
+           value="United States of America", inplace=True)
 
 
 del NAmerica_forest['country_code']
@@ -1228,346 +1203,526 @@ NAmerica_forest
 
 # In[]:<br>
 # DataFrame with CO2
-
-# In[47]:
-
-
 NAmerica_co2 = pd.read_csv('co2.csv')
 NAmerica_co2 = NAmerica_co2[(NAmerica_co2.country_name == 'Canada')
-                            | (NAmerica_co2.country_name == 'United States')
-                            | (NAmerica_co2.country_name == 'Dominican Republic')]
-
-
-# In[48]:
-
-
+          | (NAmerica_co2.country_name == 'United States')
+          | (NAmerica_co2.country_name == 'Dominican Republic')]
 NAmerica_co2 = NAmerica_co2.rename(columns={'year': 'Year',
-                                            'country_name': 'Area',
-                                            'value': 'CO2'})
-
-
-# In[49]:
-
-
+                          'country_name': 'Area',
+                          'value': 'CO2'})
 NAmerica_co2.replace(to_replace="United States",
-                     value="United States of America", inplace=True)
-
-
-# In[50]:
-
-
+           value="United States of America", inplace=True)
+NAmerica_co2['CO2'] = round((NAmerica_co2['CO2']/1000000),2)
 del NAmerica_co2['country_code']
-
-
-# In[51]:
-
-
-NAmerica_co2.isnull().sum()
-
-
-# In[52]:
-
-
-NAmerica_co2.info()
+NAmerica_co2
 
 
 # In[]:<br>
 # DataFrame with GDP
 
-# In[53]:
-
-
 NAmerica_gdp = pd.read_csv('GDP_percapita.csv')
-
-
-# In[54]:
-
-
-NAmerica_gdp = NAmerica_gdp.rename(columns={'Country Name': 'Area'})
-
-
-# In[55]:
-
-
+NAmerica_gdp = NAmerica_gdp.rename(columns={'Country Name':'Area'})
 NAmerica_gdp = NAmerica_gdp[(NAmerica_gdp.Area == 'Canada')
-                            | (NAmerica_gdp.Area == 'United States')
-                            | (NAmerica_gdp.Area == 'Dominican Republic')]
-
-
-# In[56]:
-
-
+          | (NAmerica_gdp.Area == 'United States')
+          | (NAmerica_gdp.Area == 'Dominican Republic')]
 NAmerica_gdp.replace(to_replace="United States",
-                     value="United States of America", inplace=True)
+           value="United States of America", inplace=True)
 del NAmerica_gdp['Code']
 del NAmerica_gdp['Unnamed: 65']
 
-
-# In[57]:
-
-
-NAmerica_gdp
-
-
-# In[]:<br>
-# Transform GDP
-
-# In[58]:
-
-
 NAmerica_gdp_trans = pd.melt(NAmerica_gdp, id_vars='Area')
 NAmerica_gdp_trans = NAmerica_gdp_trans.rename(columns={'variable': 'Year',
-                                                        'value': 'GDP_per_capita'})
+                              'value': 'GDP_per_capita'})
 NAmerica_gdp_trans = NAmerica_gdp_trans.sort_values(by=['Area', 'Year'])
 NAmerica_gdp_trans.Year = pd.to_numeric(NAmerica_gdp_trans.Year)
 
-
 # In[59]:
 
+## Urbanization
 
-NAmerica_gdp_trans
-
-
-# In[]:<br>
-# Join  temperature, forest, co2 and GDP
-
-# In[60]:
-
-
-NAmerica_tf = pd.merge(NAmerica_trans, NAmerica_forest,
-                       on=['Area', 'Year'], how='left')
-NAmerica_tfc = pd.merge(NAmerica_tf, NAmerica_co2, on=[
-                        'Area', 'Year'], how='left')
-NAmerica_tfcg = pd.merge(NAmerica_tfc, NAmerica_gdp_trans, on=[
-                         'Area', 'Year'], how='left')
-NAmerica_tfcg
-
+NAmerica_urb = pd.read_csv('share-of-population-urban.csv')
+NAmerica_urb = NAmerica_urb.rename(columns={'Entity':'Area'})
+NAmerica_urb = NAmerica_urb[(NAmerica_urb.Area == 'Canada')
+          | (NAmerica_urb.Area == 'United States')
+          | (NAmerica_urb.Area == 'Dominican Republic')]
+del NAmerica_urb['Code']
+NAmerica_urb = NAmerica_urb.rename(columns={'Urban population ( of total population)':'Urbanization'})
+NAmerica_urb.replace(to_replace="United States",
+           value="United States of America", inplace=True)
+NAmerica_urb
 
 # In[]:<br>
-#  Temperature
+# Join  temperature, forest, co2, GDP and urbanization
+NAmerica_tf = pd.merge(NAmerica_trans, NAmerica_forest, on =['Area','Year'], how = 'left')
+NAmerica_tfc = pd.merge(NAmerica_tf, NAmerica_co2, on=['Area', 'Year'], how = 'left')
+NAmerica_tfcg = pd.merge(NAmerica_tfc, NAmerica_gdp_trans, on=['Area', 'Year'], how = 'left')
+NAmerica_tfcg = pd.merge(NAmerica_tfcg, NAmerica_urb, on=['Area', 'Year'], how = 'left')
+NAmerica_tfcg 
 
-# In[61]:
-
-
-tfc_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
-tfc_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
-tfc_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.Temp, label='Kanada', color='#00035b')
-plt.plot(tfc_US.Year, tfc_US.Temp, label='Stany Zjednoczone', color='#0343df')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.Temp,
-         label='Dominikana', color='#a2cffe')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Temperatura \u2103')
-plt.title('Zmiany temperatur (1961-2019)')
-plt.legend()
-plt.show()
-
-
-# In[]:<br>
-#  Forest
-
-# In[62]:
-
-
-tfc_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
-tfc_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
-tfc_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.Forest, label='Kanada', color='#00035b')
-plt.plot(tfc_US.Year, tfc_US.Forest,
-         label='Stany Zjednoczone', color='#0343df')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.Forest,
-         label='Dominikana', color='#a2cffe')
-plt.yscale('log')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Poziom zalesienia')
-plt.title('Zalesienie (1990-2019)')
-plt.legend()
-plt.show()
-
-
-# In[]:<br>
-#  CO2
-
-# In[63]:
-
-
-tfc_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
-tfc_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
-tfc_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
-plt.plot(tfc_Canada.Year, tfc_Canada.CO2, label='Kanada', color='#00035b')
-plt.plot(tfc_US.Year, tfc_US.CO2, label='Stany Zjednoczone', color='#0343df')
-plt.plot(tfc_Dominican.Year, tfc_Dominican.CO2,
-         label='Dominikana', color='#a2cffe')
-plt.yscale('log')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Emisja CO^2')
-plt.title('Emisja CO^2 (1961-2019)')
-plt.legend()
-plt.show()
 
 # In[]:
-# Kanada: temp vs CO2
+#Kanada: temp vs CO2
 
 fig, ax1 = plt.subplots()
+tfcg_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
+ax1.set_ylabel('CO^2', color='#FF6600') 
+ax1.bar(tfcg_Canada.Year, tfcg_Canada.CO2, label = 'Kanada', color ='#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
 
-ax1.set_xlabel('Rok')
-ax1.set_ylabel('Temperatura', color='#00035b')
-ax1.plot(tfc_Canada.Year, tfc_Canada.Temp, label='Kanada', color='#00035b')
-ax1.tick_params(axis='y', labelcolor='#00035b')
+ax2 = ax1.twinx() 
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+bspl = splrep(tfcg_Canada.Year,tfcg_Canada.Temp,s=10)
+bspl_y = splev(tfcg_Canada.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Canada.Year, bspl_y, label = 'Kanada', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
 
-
-# we already handled the x-label with ax1
-ax2.set_ylabel('CO^2', color='black')
-ax2.plot(tfc_Canada.Year, tfc_Canada.CO2, label='Kanada', color='black')
-ax2.tick_params(axis='y', labelcolor='black')
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.title('Kanada: zmiany temperatury vs emisja CO^2 (1961-2019)')
+fig.tight_layout() 
+#plt.title('Kanada: zmiany temperatury vs emisja CO^2 (1961-2019)')
 
 plt.show()
 
 # In[]:
-# USA: temp vs CO2
+#USA: temp vs CO2
+
+tfcg_US = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
 
 fig, ax1 = plt.subplots()
+ax1.set_ylabel('CO2   [bln t]', color='#FF6600')  
+ax1.bar(tfcg_US.Year, tfcg_US.CO2, label = 'USA', color = '#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
 
-ax1.set_xlabel('Rok')
-ax1.set_ylabel('Temperatura', color='#0343df')
-ax1.plot(tfc_US.Year, tfc_US.Temp, label='USA', color='#0343df')
-ax1.tick_params(axis='y', labelcolor='#0343df')
+ax2 = ax1.twinx() 
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+bspl = splrep(tfcg_US.Year,tfcg_US.Temp,s=2)
+bspl_y = splev(tfcg_US.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Zmiana temperatury [\u2103]', color='#000000')
+ax2.plot(tfcg_US.Year, bspl_y, label = 'USA', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
 
-
-# we already handled the x-label with ax1
-ax2.set_ylabel('CO^2', color='black')
-ax2.plot(tfc_US.Year, tfc_US.CO2, label='USA', color='black')
-ax2.tick_params(axis='y', labelcolor='black')
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.title('USA: zmiany temperatury vs emisja CO^2 (1961-2019)')
-
+plt.ylim(-1,2.5)
 plt.show()
 
-
 # In[]:
-# Dominikana: temp vs CO2
-
+#Dominikana: temp vs CO2
+tfcg_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
 fig, ax1 = plt.subplots()
+ax1.set_ylabel('CO^2', color='#FF6600')  
+ax1.bar(tfcg_Dominican.Year, tfcg_Dominican.CO2, label = 'Dominikana', color = '#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
 
-ax1.set_xlabel('Rok')
-ax1.set_ylabel('Temperatura', color='#a2cffe')
-ax1.plot(tfc_Dominican.Year, tfc_Dominican.Temp,
-         label='Dominikana', color='#a2cffe')
-ax1.tick_params(axis='y', labelcolor='#a2cffe')
+ax2 = ax1.twinx()  
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+bspl = splrep(tfcg_Dominican.Year,tfcg_Dominican.Temp,s=2)
+bspl_y = splev(tfcg_Dominican.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Dominican.Year, bspl_y, label = 'Dominikana', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
 
-
-# we already handled the x-label with ax1
-ax2.set_ylabel('CO^2', color='black')
-ax2.plot(tfc_Dominican.Year, tfc_Dominican.CO2,
-         label='Dominikana', color='black')
-ax2.tick_params(axis='y', labelcolor='black')
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
+fig.tight_layout()  
 plt.title('Dominikana: zmiany temperatury vs emisja CO^2 (1961-2019)')
-
 plt.show()
 
 
-# n[]:<br>
+# In[]:
+#Kanada: temp vs Zalesienie
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Canada.Year, tfcg_Canada.Forest, label = 'Kanada', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Canada.Year,tfcg_Canada.Temp,s=10)
+bspl_y = splev(tfcg_Canada.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Canada.Year, bspl_y, label = 'Kanada', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('Kanada: zmiany temperatury vs zalesienie (1990-2019)')
+plt.show()
+
+# In[]:
+#USA: temp vs Zalesienie
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900') 
+ax1.bar(tfcg_US.Year, tfcg_US.Forest, label = 'USA', color = '#009900')
+ax1.tick_params(axis='y', labelcolor='#009900')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_US.Year,tfcg_US.Temp,s=2)
+bspl_y = splev(tfcg_US.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_US.Year, bspl_y, label = 'USA', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('USA: zmiany temperatury vs zalesienie (1990-2019)')
+plt.show()
+
+
+# In[]:
+#Dominikana: temp vs Zalesienie
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Dominican.Year, tfcg_Dominican.Forest, label = 'Dominikana', color = '#009900')
+ax1.tick_params(axis='y', labelcolor='#009900')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Dominican.Year,tfcg_Dominican.Temp,s=2)
+bspl_y = splev(tfcg_Dominican.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Dominican.Year, bspl_y, label = 'Dominikana', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('Dominikana: zmiany temperatury vs zalesienie (1990-2019)')
+plt.show()
+
+
+# In[]:
+#Kanada: temp vs GDP
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('GDP per capita', color='#388CB2')  
+ax1.bar(tfcg_Canada.Year, tfcg_Canada.GDP_per_capita, label = 'Kanada', color ='#388CB2')
+ax1.tick_params(axis='y', labelcolor='#388CB2')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Canada.Year,tfcg_Canada.Temp,s=20)
+bspl_y = splev(tfcg_Canada.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Canada.Year, bspl_y, label = 'Kanada', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout() 
+plt.title('Kanada: zmiany temperatury vs GDP per capita (1961-2019)')
+plt.show()
+
+# In[]:
+#USA: temp vs GDP
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('GDP per capita', color='#388CB2')  
+ax1.bar(tfcg_US.Year, tfcg_US.GDP_per_capita, label = 'USA', color = '#388CB2')
+ax1.tick_params(axis='y', labelcolor='#388CB2')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_US.Year,tfcg_US.Temp,s=2)
+bspl_y = splev(tfcg_US.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_US.Year, bspl_y, label = 'USA', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('USA: zmiany temperatury vs GDP per capita (1961-2019)')
+plt.show()
+
+
+# In[]:
+#Dominikana: temp vs GDP
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('GDP per capita', color='#388CB2')  
+ax1.bar(tfcg_Dominican.Year, tfcg_Dominican.GDP_per_capita, label = 'Dominikana', color = '#388CB2')
+ax1.tick_params(axis='y', labelcolor='#388CB2')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Dominican.Year,tfcg_Dominican.Temp,s=2)
+bspl_y = splev(tfcg_Dominican.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Dominican.Year, bspl_y, label = 'Dominikana', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('Dominikana: zmiany temperatury vs GDP per capita (1961-2019)')
+plt.show()
+
+
+# In[]:
+#Kanada: temp vs urbanization
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Urbanizacja', color='#ABABAB')  
+ax1.bar(tfcg_Canada.Year, tfcg_Canada.Urbanization, label = 'Kanada', color ='#ABABAB')
+ax1.tick_params(axis='y', labelcolor='#ABABAB')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Canada.Year,tfcg_Canada.Temp,s=10)
+bspl_y = splev(tfcg_Canada.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Canada.Year, bspl_y, label = 'Kanada', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('Kanada: zmiany temperatury vs urbanizacja (1961-2019)')
+plt.show()
+
+# In[]:
+#USA: temp vs urbanization
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Urbanizacja', color='#ABABAB')
+ax1.bar(tfcg_US.Year, tfcg_US.Urbanization, label = 'USA', color = '#ABABAB')
+ax1.tick_params(axis='y', labelcolor='#ABABAB')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_US.Year,tfcg_US.Temp,s=2)
+bspl_y = splev(tfcg_US.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_US.Year, bspl_y, label = 'USA', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('USA: zmiany temperatury vs urbanizacja (1961-2019)')
+plt.show()
+
+
+# In[]:
+#Dominikana: temp vs Urbanizacja
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Urbanizacja', color='#ABABAB')  
+ax1.bar(tfcg_Dominican.Year, tfcg_Dominican.Urbanization, label = 'Dominikana', color = '#ABABAB')
+ax1.tick_params(axis='y', labelcolor='#ABABAB')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Dominican.Year,tfcg_Dominican.Temp,s=2)
+bspl_y = splev(tfcg_Dominican.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Dominican.Year, bspl_y, label = 'Dominikana', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.title('Dominikana: zmiany temperatury vs urbanizacja (1961-2019)')
+plt.show()
+
+
+#In[]
+
+# In[]:
+#Canada: co2 vs urbanizacja
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('CO2', color='#FF6600')  
+ax1.bar(tfcg_Canada.Year, tfcg_Canada.CO2, label = 'Kanada', color ='#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600') 
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Canada.Year,tfcg_Canada.Urbanization,s=2)
+bspl_y = splev(tfcg_Canada.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Urbanization', color='darkgrey')
+ax2.plot(tfcg_Canada.Year, bspl_y, label = 'Kanada', color = 'darkgrey')
+ax2.tick_params(axis='y', labelcolor='darkgrey')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#USA: GDP vs FOREST
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Forest', color='#009900')  
+ax1.bar(tfcg_US.Year, tfcg_US.Forest, label = 'USA', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900') 
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_US.Year,tfcg_US.GDP_per_capita,s=2)
+bspl_y = splev(tfcg_US.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('GDP per capita', color='darkblue')
+ax2.plot(tfcg_US.Year, bspl_y, label = 'USA', color = 'darkblue')
+ax2.tick_params(axis='y', labelcolor='darkblue')
+
+fig.tight_layout()  
+plt.show()
+
+# In[]:
+#DOminican: CO2 vs FOREST
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Forest', color='#009900')  
+ax1.bar(tfcg_Dominican.Year, tfcg_Dominican.Forest, label = 'Dominikana', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900') 
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Dominican.Year,tfcg_Dominican.CO2,s=2)
+bspl_y = splev(tfcg_Dominican.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('CO2', color='#FF6600')
+ax2.plot(tfcg_Dominican.Year, bspl_y, label = 'USA', color = '#FF6600')
+ax2.tick_params(axis='y', labelcolor='#FF6600')
+
+fig.tight_layout()  
+plt.show()
+
+# In[]:<br>
 # Correlation_Canada
-
-# In[64]:
-
-
 corr_Canada = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Canada')]
 del corr_Canada['Area']
 del corr_Canada['Year']
-
-
-# In[65]:
-
-
-corr_Canada = corr_Canada.corr()
-sns.heatmap(corr_Canada, annot=True)
+corr_Canada= corr_Canada.corr()
+sns.heatmap(corr_Canada, annot=True, cmap='Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
 plt.show()
 
-
-# n[]:<br>
+# In[]:<br>
 # Correlation_USA
-
-# In[66]:
-
-
 corr_USA = NAmerica_tfcg[(NAmerica_tfcg.Area == 'United States of America')]
 del corr_USA['Area']
 del corr_USA['Year']
-
-
-# In[67]:
-
-
-corr_USA = corr_USA.corr()
-sns.heatmap(corr_USA, annot=True)
+corr_USA= corr_USA.corr()
+sns.heatmap(corr_USA, annot=True, cmap='Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
 plt.show()
 
-
-# n[]:<br>
+# In[]:<br>
 # Correlation_Dominican
-
-# In[68]:
-
-
 corr_Dominican = NAmerica_tfcg[(NAmerica_tfcg.Area == 'Dominican Republic')]
 del corr_Dominican['Area']
 del corr_Dominican['Year']
-
-
-# In[69]:
-
-
-corr_Dominican = corr_Dominican.corr()
-sns.heatmap(corr_Dominican, annot=True)
+corr_Dominican= corr_Dominican.corr()
+sns.heatmap(corr_Dominican, annot=True, cmap='Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
 plt.show()
 
+#In[]:<br>
+# Regression temp vs foresst
+
+sns.set_context('paper')
+sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'Canada'))],
+            x="Forest",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'United States of America'))],
+            x="Forest",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'Dominican Republic'))],
+            x="Forest",
+            y="Temp",
+            aspect=2.5,
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+plt.show()
+#In[]:<br>
+# Regression temp vs urbanization
+
+sns.set_context('paper')
+sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'Canada'))],
+            x="Urbanization",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'United States of America'))],
+            x="Urbanization",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'Dominican Republic'))],
+            x="Urbanization",
+            y="Temp",
+            aspect=2.5,
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+plt.show()
+
+# In[]:<br>
+# Regression_USA
+
+#CO2 vs FOREST
+sns.set_context('paper')
+f = sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg['Area'] == 'United States of America'))& (NAmerica_tfcg['Year'])],
+           x="Forest", y="CO2", aspect=2.5, scatter_kws={'color':'#009900'},line_kws={'color': '#009900'}, facet_kws={'sharey': False, 'sharex': False})
+axes = f.axes
+axes[0,0].set_ylim(0,)
+f.set(xlabel='Zalesienie [%]', ylabel='CO2 [bln t]')
+plt.show()
+
+#In[]:
+#CO2 vs GDP
+
+sns.set_context('paper')
+f = sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg.Area == 'United States of America'))& (NAmerica_tfcg['Year'])],
+           x="GDP_per_capita", y="CO2", aspect=2.5, scatter_kws={'color':'#388CB2'},line_kws={'color': '#388CB2'}, facet_kws={'sharey': False, 'sharex': False})
+axes = f.axes
+axes[0,0].set_ylim(0,)
+f.set(xlabel='PKB per capita [$]', ylabel='CO2 [bln t]')
+plt.show()
+
+#CO2 vs urb
+sns.set_context('paper')
+f = sns.lmplot(data=NAmerica_tfcg[((NAmerica_tfcg.Area == 'United States of America'))& (NAmerica_tfcg['Year'])],
+           x="Urbanization", y="CO2", aspect=2.5, scatter_kws={'color':'#ABABAB'},line_kws={'color': '#ABABAB'}, facet_kws={'sharey': False, 'sharex': False})
+axes = f.axes
+axes[0,0].set_ylim(0,)
+f.set(xlabel='Poziom urbanizacji [%]', ylabel='CO2 [bln t]')
+plt.show()
 
 # #### AFRICA<br>
 # In[ ]:
-
-# Making individual variable for group purpose working
-
 # DataFrame with 3 countries from Africa
-
-# In[70]:
-
-
 africa = df.copy()
 africa_t = optional_1(africa)
-africa_t_full = africa_t[(africa_t.Continent == 'Africa')]
+africa_t_full= africa_t [(africa_t.Continent == 'Africa')]
 africa_t_c3 = africa_t_full[(africa_t_full.Area == 'Algeria')
-                            | (africa_t_full.Area == 'United Republic of Tanzania')
-                            | (africa_t_full.Area == 'Mozambique')]
+                | (africa_t_full.Area == 'United Republic of Tanzania')
+                | (africa_t_full.Area == 'Mozambique')]
 africa_t_c3 = africa_t_c3[(africa_t_c3.Months == 'Meteorological year')
-                          & (africa_t_c3.Element == 'Temperature change')]
-africa_t_c3
-
-
-# Inp[]:<br>
-# reparing data
-
-# In[71]:
-
-
+              & (africa_t_c3.Element == 'Temperature change')]
 africa_t_c3.columns = africa_t_c3.columns.str.replace('Y', '')
 africa_t_c3.replace(to_replace="United Republic of Tanzania",
-                    value="Tanzania", inplace=True)
+           value="Tanzania", inplace=True)
 del africa_t_c3['Area_Code']
 del africa_t_c3['Months_Code']
 del africa_t_c3['Months']
@@ -1578,16 +1733,9 @@ del africa_t_c3['Continent']
 del africa_t_c3['Continent_Code']
 africa_t_c3
 
-
-# In[]:<br>
-# Transformation table
-
-# In[72]:
-
-
 africa_t_c3_trans = pd.melt(africa_t_c3, id_vars='Area')
 africa_t_c3_trans = africa_t_c3_trans.rename(columns={'variable': 'Year',
-                                                      'value': 'Temp'})
+                              'value': 'Temp'})
 africa_t_c3_trans = africa_t_c3_trans.sort_values(by=['Area', 'Year'])
 africa_t_c3_trans.Year = pd.to_numeric(africa_t_c3_trans.Year)
 africa_t_c3_trans.info()
@@ -1596,26 +1744,14 @@ africa_t_c3_trans.info()
 # In[]:<br>
 # DataFrame with Forests
 
-# In[73]:
-
-
 africa_forest = pd.read_csv('forest.csv')
 africa_forest = africa_forest[(africa_forest.country_name == 'Algeria')
-                              | (africa_forest.country_name == 'Tanzania')
-
-                              | (africa_forest.country_name == 'Mozambique')]
-
-
-# In[74]:
-
+                | (africa_forest.country_name == 'Tanzania')
+                | (africa_forest.country_name == 'Mozambique')]
 
 africa_forest = africa_forest.rename(columns={'year': 'Year',
-                                              'country_name': 'Area',
-                                              'value': 'Forest'})
-
-
-# In[75]:
-
+                                'country_name': 'Area',
+                                'value': 'Forest'})
 
 del africa_forest['country_code']
 africa_forest.Year = pd.to_numeric(africa_forest.Year)
@@ -1625,370 +1761,515 @@ africa_forest.info()
 
 # In[]:<br>
 # DataFrame with CO2
-
-# In[76]:
-
-
 africa_co2 = pd.read_csv('co2.csv')
 africa_co2 = africa_co2[(africa_co2.country_name == 'Algeria')
-                        | (africa_co2.country_name == 'Tanzania')
-                        | (africa_co2.country_name == 'Mozambique')]
-
-
-# In[77]:
-
-
+          | (africa_co2.country_name == 'Tanzania')
+          | (africa_co2.country_name == 'Mozambique')]
 africa_co2 = africa_co2.rename(columns={'year': 'Year',
-                                        'country_name': 'Area',
-                                        'value': 'CO2'})
-
-
-# In[78]:
-
-
+                          'country_name': 'Area',
+                          'value': 'CO2'})
 del africa_co2['country_code']
-
-
-# In[79]:
-
-
-africa_co2.isnull().sum()
-africa_co2.info()
+africa_co2['CO2'] = round((africa_co2['CO2']/1000),2)
+africa_co2
 
 
 # In[]:<br>
 # DataFrame with GDP
-
-# In[80]:
-
-
 africa_gdp = pd.read_csv('GDP_percapita.csv')
-
-
-# In[81]:
-
-
-africa_gdp = africa_gdp.rename(columns={'Country Name': 'Area'})
-
-
-# In[82]:
-
-
+africa_gdp = africa_gdp.rename(columns={'Country Name':'Area'})
 africa_gdp = africa_gdp[(africa_gdp.Area == 'Algeria')
-                        | (africa_gdp.Area == 'Tanzania')
-                        | (africa_gdp.Area == 'Mozambique')]
-
-
-# In[83]:
-
-
+          | (africa_gdp.Area == 'Tanzania')
+          | (africa_gdp.Area == 'Mozambique')]
 del africa_gdp['Code']
 del africa_gdp['Unnamed: 65']
 
-
-# In[84]:
-
-
-africa_gdp
-
-
-# In[]:<br>
-# Transform GDP
-
-# In[85]:
-
-
 africa_gdp_trans = pd.melt(africa_gdp, id_vars='Area')
 africa_gdp_trans = africa_gdp_trans.rename(columns={'variable': 'Year',
-                                                    'value': 'GDP_per_capita'})
+                              'value': 'GDP_per_capita'})
 africa_gdp_trans = africa_gdp_trans.sort_values(by=['Area', 'Year'])
 africa_gdp_trans.Year = pd.to_numeric(africa_gdp_trans.Year)
 
-
-# In[86]:
-
-
 africa_gdp_trans.Area.unique()
+
+# In[59]:
+## Urbanization
+
+africa_urb = pd.read_csv('share-of-population-urban.csv')
+africa_urb = africa_urb.rename(columns={'Entity':'Area'})
+africa_urb = africa_urb[(africa_urb.Area == 'Algeria')
+          | (africa_urb.Area == 'Tanzania')
+          | (africa_urb.Area == 'Mozambique')]
+del africa_urb['Code']
+africa_urb = africa_urb.rename(columns={'Urban population ( of total population)':'Urbanization'})
+africa_urb.replace(to_replace="United States",
+           value="United States of America", inplace=True)
+africa_urb
 
 
 # In[]:<br>
 # Join  temperature, forest & co2
 
-# In[87]:
-
-
-africa_tf = pd.merge(africa_t_c3_trans, africa_forest,
-                     on=['Area', 'Year'], how='left')
-africa_tfc = pd.merge(africa_tf, africa_co2, on=['Area', 'Year'], how='left')
-africa_tfcg = pd.merge(africa_tfc, africa_gdp_trans,
-                       on=['Area', 'Year'], how='left')
+africa_tf = pd.merge(africa_t_c3_trans, africa_forest, on =['Area','Year'], how = 'left')
+africa_tfc = pd.merge(africa_tf, africa_co2, on=['Area', 'Year'], how = 'left')
+africa_tfcg = pd.merge(africa_tfc, africa_gdp_trans, on =['Area', 'Year'], how = 'left')
+africa_tfcg = pd.merge(africa_tfcg, africa_urb, on=['Area', 'Year'], how = 'left')
 africa_tfcg
 
 
-# In[]:<br>
-#  Temperature
 
-# In[88]:
+# In[]:
+#Algeria: temp vs CO2
 
-
+fig, ax1 = plt.subplots()
 tfcg_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
-tfcg_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
-tfcg_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp,
-         label='Algieria', color='#000000')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp,
-         label='Tanzania', color='#929591')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp,
-         label='Mozambik', color='#d8dcd6')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Temperatura \u2103')
-plt.title('Zmiany temperatur (1961-2019)')
-plt.legend()
+ax1.set_ylabel('CO^2', color='#FF6600') 
+ax1.bar(tfcg_Algeria.Year, tfcg_Algeria.CO2, label = 'Algeria', color ='#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Algeria.Year,tfcg_Algeria.Temp,s=3)
+bspl_y = splev(tfcg_Algeria.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Algeria.Year, bspl_y, label = 'Algieria', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout() 
 plt.show()
 
-
-# In[]:<br>
-#  ALGERIA: Temperature vs GDP
-
-# In[89]:
-
-
-tfcg_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp, label='Algieria_temp')
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita, label='Algieria_GDP')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Temperatura \u2103 \n GDP per capita')
-plt.title('AGLIERIA: Zmiany temperatur vs GDP per capita (1961-2019)')
-plt.legend()
-plt.show()
-
-
-# In[]:<br>
-#  Tanzania: Temperature vs GDP
-
-# In[90]:
-
+# In[]:
+#Tanzania: temp vs CO2
 
 tfcg_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp, label='Tanzania_temp')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita, label='Tanzania_GDP')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Temperatura \u2103 \n GDP per capita')
-plt.title('TANZANIA: Zmiany temperatur vs GDP per capita (1961-2019)')
-plt.legend()
+fig, ax1 = plt.subplots()
+
+ax1.set_ylabel('CO^2', color='#FF6600')  
+ax1.bar(tfcg_Tanzania.Year, tfcg_Tanzania.CO2, label = 'Tanzania', color = '#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Tanzania.Year,tfcg_Tanzania.Temp,s=2)
+bspl_y = splev(tfcg_Tanzania.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Tanzania.Year, bspl_y, label = 'Tanzania', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+
+fig.tight_layout()  
 plt.show()
 
 
-# In[]:<br>
-#  Mozambique: Temperature vs GDP
-
-# In[91]:
-
+# In[]:
+#Mozambique: temp vs CO2
+fig, ax1 = plt.subplots()
 
 tfcg_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp, label='Mozambik_temp')
-plt.plot(tfcg_Mozambique.Year,
-         tfcg_Mozambique.GDP_per_capita, label='Mozambik_GDP')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Temperatura \u2103 \n GDP per capita')
-plt.title('MOZAMBIK: Zmiany temperatur vs GDP per capita (1961-2019)')
-plt.legend()
-plt.show()
+
+ax1.set_ylabel('CO2 [mln t]', color='#FF6600')  
+ax1.bar(tfcg_Mozambique.Year, tfcg_Mozambique.CO2, label = 'Mozambik', color = '#FF6600')
+ax1.tick_params(axis='y', labelcolor='#FF6600')
 
 
-# In[]:<br>
-#  Forest
+ax2 = ax1.twinx()  
 
-# In[92]:
+bspl = splrep(tfcg_Mozambique.Year, tfcg_Mozambique.Temp,s=2)
+bspl_y = splev(tfcg_Mozambique.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Zmiana temperatury [\u2103]', color='#000000')
+ax2.plot(tfcg_Mozambique.Year, bspl_y, label = 'Mozambik', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
 
-
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.Forest,
-         label='Algieria', color='#000000')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Forest,
-         label='Tanzania', color='#929591')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Forest,
-         label='Mozambik', color='#d8dcd6')
-plt.yscale('log')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Poziom zalesienia')
-plt.title('Zalesienie (1990-2019)')
-plt.legend()
-plt.show()
-
-
-# In[]:<br>
-#  CO2
-
-# In[93]:
-
-
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.CO2,
-         label='Algieria', color='#000000')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.CO2,
-         label='Tanzania', color='#929591')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.CO2,
-         label='Mozambik', color='#d8dcd6')
-plt.yscale('log')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('Emisja CO^2')
-plt.title('Emisja CO^2 (1961-2019)')
-plt.legend()
-plt.show()
-
-
-# In[]:<br>
-#  GDP
-
-# In[94]:
-
-
-plt.plot(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita,
-         label='Algieria', color='#000000')
-plt.plot(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita,
-         label='Tanzania', color='#929591')
-plt.plot(tfcg_Mozambique.Year, tfcg_Mozambique.GDP_per_capita,
-         label='Mozambik', color='#d8dcd6')
-plt.subplots_adjust(left=-0.5)
-plt.xlabel('Rok')
-plt.ylabel('GDP per capita (zmiana)')
-plt.title('GDP per capita(1961-2019)')
-plt.legend()
-plt.show()
-
-# In[]:
-# Algeria: temp vs CO2
-
-fig, ax1 = plt.subplots()
-
-ax1.set_xlabel('Rok')
-ax1.set_ylabel('Temperatura', color='#000000')
-ax1.plot(tfcg_Algeria.Year, tfcg_Algeria.Temp,
-         label='Algeria', color='#000000')
-ax1.tick_params(axis='y', labelcolor='#000000')
-
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
-
-
-ax2.set_ylabel('CO^2', color='red')  # we already handled the x-label with ax1
-ax2.plot(tfcg_Algeria.Year, tfcg_Algeria.CO2, label='Algeria', color='red')
-ax2.tick_params(axis='y', labelcolor='red')
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.title('Algeria: zmiany temperatury vs emisja CO^2 (1961-2019)')
-
+plt.ylim(-1,2.5)
 plt.show()
 
 
 # In[]:
-# Tanzania: temp vs CO2
-
+#Algeria: temp vs Zalesienie
 fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Algeria.Year, tfcg_Algeria.Forest, label = 'Algieria', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900')
 
-ax1.set_xlabel('Rok')
-ax1.set_ylabel('Temperatura', color='#929591')
-ax1.plot(tfcg_Tanzania.Year, tfcg_Tanzania.Temp,
-         label='Tanzania', color='#929591')
-ax1.tick_params(axis='y', labelcolor='#929591')
+ax2 = ax1.twinx() 
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+bspl = splrep(tfcg_Algeria.Year,tfcg_Algeria.Temp,s=3)
+bspl_y = splev(tfcg_Algeria.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Algeria.Year, bspl_y, label = 'Algieria', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
 
-
-ax2.set_ylabel('CO^2', color='red')  # we already handled the x-label with ax1
-ax2.plot(tfcg_Tanzania.Year, tfcg_Tanzania.CO2, label='Tanzania', color='red')
-ax2.tick_params(axis='y', labelcolor='red')
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.title('Tanzania: zmiany temperatury vs emisja CO^2 (1961-2019)')
-
+fig.tight_layout()  
 plt.show()
 
 # In[]:
-# Mozambik: temp vs CO2
-
+#Tanzania: temp vs Zalesienie
 fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900') 
+ax1.bar(tfcg_Tanzania.Year, tfcg_Tanzania.Forest, label = 'Tanzania', color = '#009900')
+ax1.tick_params(axis='y', labelcolor='#009900')
 
-ax1.set_xlabel('Rok')
-ax1.set_ylabel('Temperatura', color='#d8dcd6')
-ax1.plot(tfcg_Mozambique.Year, tfcg_Mozambique.Temp,
-         label='Mozambik', color='#d8dcd6')
-ax1.tick_params(axis='y', labelcolor='#d8dcd6')
+ax2 = ax1.twinx()  
 
-ax2 = ax1.twinx()  # instantiate a second axes that shares the same x-axis
+bspl = splrep(tfcg_Tanzania.Year,tfcg_Tanzania.Temp,s=2)
+bspl_y = splev(tfcg_Tanzania.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Tanzania.Year, bspl_y, label = 'Tanzania', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
 
-
-ax2.set_ylabel('CO^2', color='red')  # we already handled the x-label with ax1
-ax2.plot(tfcg_Mozambique.Year, tfcg_Mozambique.CO2,
-         label='Mozambik', color='red')
-ax2.tick_params(axis='y', labelcolor='red')
-
-fig.tight_layout()  # otherwise the right y-label is slightly clipped
-plt.title('Mozambik: zmiany temperatury vs emisja CO^2 (1961-2019)')
-
+fig.tight_layout()  
 plt.show()
 
 
-# n[]:<br>
+# In[]:
+#Mozambique: temp vs Zalesienie
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Mozambique.Year, tfcg_Mozambique.Forest, label = 'Mozambik', color = '#009900')
+ax1.tick_params(axis='y', labelcolor='#009900')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Mozambique.Year,tfcg_Mozambique.Temp,s=2)
+bspl_y = splev(tfcg_Mozambique.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Mozambique.Year, bspl_y, label = 'Mozambik', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#Algeria: temp vs GDP
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('GDP per capita', color='#388CB2')  
+ax1.bar(tfcg_Algeria.Year, tfcg_Algeria.GDP_per_capita, label = 'Algieria', color ='#388CB2')
+ax1.tick_params(axis='y', labelcolor='#388CB2')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Algeria.Year,tfcg_Algeria.Temp,s=2)
+bspl_y = splev(tfcg_Algeria.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Algeria.Year, bspl_y, label = 'Algieria', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout() 
+plt.show()
+
+# In[]:
+#Tanzania: temp vs GDP
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('GDP per capita', color='#388CB2')  
+ax1.bar(tfcg_Tanzania.Year, tfcg_Tanzania.GDP_per_capita, label = 'Tanzania', color = '#388CB2')
+ax1.tick_params(axis='y', labelcolor='#388CB2')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Tanzania.Year,tfcg_Tanzania.Temp,s=2)
+bspl_y = splev(tfcg_Tanzania.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Tanzania.Year, bspl_y, label = 'Tanzania', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#Mozambique: temp vs GDP
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('GDP per capita', color='#388CB2')  
+ax1.bar(tfcg_Mozambique.Year, tfcg_Mozambique.GDP_per_capita, label = 'Mozambik', color = '#388CB2')
+ax1.tick_params(axis='y', labelcolor='#388CB2')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Mozambique.Year,tfcg_Mozambique.Temp,s=2)
+bspl_y = splev(tfcg_Mozambique.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Mozambique.Year, bspl_y, label = 'Mozambik', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#Algeria: temp vs urbanization
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Urbanizacja', color='#ABABAB')  
+ax1.bar(tfcg_Algeria.Year, tfcg_Algeria.Urbanization, label = 'Algieria', color ='#ABABAB')
+ax1.tick_params(axis='y', labelcolor='#ABABAB')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Algeria.Year,tfcg_Algeria.Temp,s=2)
+bspl_y = splev(tfcg_Algeria.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Algeria.Year, bspl_y, label = 'Algieria', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.show()
+
+# In[]:
+#Tanzania: temp vs urbanization
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Urbanizacja', color='#ABABAB')
+ax1.bar(tfcg_Tanzania.Year, tfcg_Tanzania.Urbanization, label = 'Tanzania', color = '#ABABAB')
+ax1.tick_params(axis='y', labelcolor='#ABABAB')
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Tanzania.Year,tfcg_Tanzania.Temp,s=2)
+bspl_y = splev(tfcg_Tanzania.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Tanzania.Year, bspl_y, label = 'Tanzania', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#Mozambique: temp vs urbanization
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Urbanizacja', color='#ABABAB')  
+ax1.bar(tfcg_Mozambique.Year, tfcg_Mozambique.Urbanization, label = 'Mozambik', color = '#ABABAB')
+ax1.tick_params(axis='y', labelcolor='#ABABAB')
+
+ax2 = ax1.twinx() 
+
+bspl = splrep(tfcg_Mozambique.Year,tfcg_Mozambique.Temp,s=2)
+bspl_y = splev(tfcg_Mozambique.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Temperatura', color='#000000')
+ax2.plot(tfcg_Mozambique.Year, bspl_y, label = 'Mozambik', color = '#000000')
+ax2.tick_params(axis='y', labelcolor='#000000')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#Algeria: forestation vs gdp
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Algeria.Year, tfcg_Algeria.Forest, label = 'Algieria', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900') 
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Algeria.Year,tfcg_Algeria.GDP_per_capita,s=2)
+bspl_y = splev(tfcg_Algeria.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('GPD per capita', color='darkblue')
+ax2.plot(tfcg_Algeria.Year, bspl_y, label = 'Algieria', color = 'darkblue')
+ax2.tick_params(axis='y', labelcolor='darkblue')
+
+fig.tight_layout()  
+plt.show()
+
+# In[]:
+#TAnzaia: forestation vs urbanization
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Tanzania.Year, tfcg_Tanzania.Forest, label = 'Tanzania', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900') 
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Tanzania.Year,tfcg_Tanzania.Urbanization,s=2)
+bspl_y = splev(tfcg_Tanzania.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Urbanization', color='#ABABAB')
+ax2.plot(tfcg_Tanzania.Year, bspl_y, label = 'Tanzania', color = '#ABABAB')
+ax2.tick_params(axis='y', labelcolor='#ABABAB')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:
+#Mozambique: forestation vs urbanization
+
+fig, ax1 = plt.subplots()
+ax1.set_ylabel('Zalesienie', color='#009900')  
+ax1.bar(tfcg_Mozambique.Year, tfcg_Mozambique.Forest, label = 'Mozambik', color ='#009900')
+ax1.tick_params(axis='y', labelcolor='#009900') 
+
+ax2 = ax1.twinx()  
+
+bspl = splrep(tfcg_Mozambique.Year,tfcg_Mozambique.Urbanization,s=2)
+bspl_y = splev(tfcg_Mozambique.Year,bspl)
+ax2.set_xlabel('Rok')
+ax2.set_ylabel('Urbanization', color='#ABABAB')
+ax2.plot(tfcg_Mozambique.Year, bspl_y, label = 'Mozambik', color = '#ABABAB')
+ax2.tick_params(axis='y', labelcolor='#ABABAB')
+
+fig.tight_layout()  
+plt.show()
+
+
+# In[]:<br>
 # Correlation_Algeria
-
-# In[95]:
-
-
 corr_Algeria = africa_tfcg[(africa_tfcg.Area == 'Algeria')]
 del corr_Algeria['Area']
 del corr_Algeria['Year']
-
-
-# In[96]:
-
-
-corr_Algeria = corr_Algeria.corr()
-sns.heatmap(corr_Algeria, annot=True)
+corr_Algeria= corr_Algeria.corr()
+sns.heatmap(corr_Algeria, annot=True, cmap='Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
 plt.show()
 
 
-# n[]:<br>
+# In[]:<br>
 # Correlation_Tanzania
-
-# In[97]:
-
-
 corr_Tanzania = africa_tfcg[(africa_tfcg.Area == 'Tanzania')]
 del corr_Tanzania['Area']
 del corr_Tanzania['Year']
-
-
-# In[98]:
-
-
-corr_Tanzania = corr_Tanzania.corr()
-sns.heatmap(corr_Tanzania, annot=True)
+corr_Tanzania= corr_Tanzania.corr()
+sns.heatmap(corr_Tanzania, annot=True, cmap='Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
 plt.show()
 
-
-# n[]:<br>
+# In[]:<br>
 # Correlation_Mozambique
-
-# In[99]:
-
 
 corr_Mozambique = africa_tfcg[(africa_tfcg.Area == 'Mozambique')]
 del corr_Mozambique['Area']
 del corr_Mozambique['Year']
-
-
-# In[100]:
-
-
-corr_Mozambique = corr_Mozambique.corr()
-sns.heatmap(corr_Mozambique, annot=True)
+corr_Mozambique= corr_Mozambique.corr()
+sns.heatmap(corr_Mozambique, annot=True, cmap='Greens')
+plt.tick_params(axis='x', labelcolor='#000000', labelsize = 15)
+plt.tick_params(axis='y', labelcolor='#000000', labelsize = 15)
+sns.set(font_scale = 1.6)
+plt.xticks(rotation = 90)
 plt.show()
 
+# In[]:<br>
+# Regression_MOZAMBIQUE
+
+#CO2 vs FOREST
+sns.set_context('paper')
+f = sns.lmplot(data=africa_tfcg[((africa_tfcg.Area == 'Mozambique'))& (africa_tfcg['Year'])],
+           x="Forest", y="CO2", aspect=2.5, scatter_kws={'color':'#009900'},line_kws={'color': '#009900'}, facet_kws={'sharey': False, 'sharex': False})
+axes = f.axes
+axes[0,0].set_ylim(-2,)
+
+f.set(xlabel='Zalesienie [%]', ylabel='CO2 [mln t]')
+plt.show()
+
+#CO2 vs GDP
+
+sns.set_context('paper')
+f = sns.lmplot(data=africa_tfcg[((africa_tfcg.Area == 'Mozambique'))& (africa_tfcg['Year'])],
+           x="GDP_per_capita", y="CO2", aspect=2.5, scatter_kws={'color':'#388CB2'},line_kws={'color': '#388CB2'}, facet_kws={'sharey': False, 'sharex': False})
+axes = f.axes
+axes[0,0].set_ylim(0,)
+f.set(xlabel='PKB per capita [$]', ylabel='CO2 [mln t]')
+plt.show()
+
+#CO2 vs urb
+sns.set_context('paper')
+f = sns.lmplot(data=africa_tfcg[((africa_tfcg.Area == 'Mozambique'))& (africa_tfcg['Year'])],
+           x="Urbanization", y="CO2", aspect=2.5, scatter_kws={'color':'#ABABAB'},line_kws={'color': '#ABABAB'}, facet_kws={'sharey': False, 'sharex': False})
+axes = f.axes
+axes[0,0].set_ylim(0,)
+f.set(xlabel='Poziom urbanizacji [%]', ylabel='CO2 [mln t]')
+plt.show()
+
+
+
+
+
+# In[]:<br>
+# Regression_C02
+
+sns.set_context('paper')
+sns.lmplot(data=africa_tfcg[((africa_tfcg.Area == 'Algeria')
+                            | (africa_tfcg.Area == 'Tanzania')
+                            | (africa_tfcg.Area == 'Mozambique'))& (africa_tfcg['Year'])],
+           x="Year", y="CO2 [kt]", aspect=2.5, hue='Area')
+plt.show()
+
+
+#In[]:<br>
+# Regression temp vs foresst
+
+sns.set_context('paper')
+sns.lmplot(data=africa_tfcg[((africa_tfcg['Area'] == 'Algeria'))],
+            x="Forest",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=africa_tfcg[((africa_tfcg['Area'] == 'Tanzania'))],
+            x="Forest",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=africa_tfcg[((africa_tfcg['Area'] == 'Mozambique'))],
+            x="Forest",
+            y="Temp",
+            aspect=2.5,
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+plt.show()
+#In[]:<br>
+# Regression temp vs urbanization
+
+sns.set_context('paper')
+sns.lmplot(data=africa_tfcg[((africa_tfcg['Area'] == 'Algeria'))],
+            x="Urbanization",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=africa_tfcg[((africa_tfcg['Area'] == 'Tanzania'))],
+            x="Urbanization",
+            y="Temp",
+            aspect=2.5,
+            col='Area',
+            hue = 'Area',
+            palette = 'Greens')
+sns.lmplot(data=africa_tfcg[((africa_tfcg['Area'] == 'Mozambique'))],
+            x="Urbanization",
+            y="Temp",
+            aspect=2.5,
+            col = 'Area',
+            hue = 'Area',
+            palette = 'Greens')
+plt.show()
 
 # #### ASIA
 
